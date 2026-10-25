@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10111a">
+  <meta name="description" content="IDBazaar — a Telegram mini app marketplace for permitted digital identity assets.">
+  <title>IDBazaar · Digital ID Market</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#0c0d14;--panel:#151722;--panel2:#1b1e2c;--line:#2b2f43;--text:#f5f6ff;--muted:#989db5;--accent:#9a86ff;--accent2:#6ce5c4;--danger:#ff7d92;--radius:22px;--safe-bottom:env(safe-area-inset-bottom,0px)}
+    *{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -12%,#22223d 0,transparent 42%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;min-height:100vh;padding-bottom:calc(96px + var(--safe-bottom))}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed}.app{max-width:760px;margin:0 auto;padding:20px 16px 30px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:11px}.brandmark{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#a18cff,#6c55e8);box-shadow:0 8px 28px #7962e833;font-weight:900;font-size:20px;color:white}.brandname{font-size:18px;line-height:1.1;letter-spacing:-.5px;font-weight:850}.brandname span{color:#a99aff}.tagline{color:var(--muted);font-size:11px;margin-top:5px}.profile-chip{display:flex;align-items:center;gap:8px;max-width:155px;background:#1a1c29;border:1px solid var(--line);border-radius:999px;padding:5px 10px 5px 5px;color:var(--text);min-height:42px}.avatar{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(140deg,#6ce5c4,#8175ff);color:#10111a;font-weight:900;overflow:hidden}.avatar img{height:100%;width:100%;object-fit:cover}.profile-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:750}.eyebrow{color:var(--accent2);font-weight:800;letter-spacing:1.5px;text-transform:uppercase;font-size:10px}.hero{border:1px solid #393252;border-radius:27px;padding:22px 20px 20px;background:linear-gradient(120deg,#252039 0%,#1c1c2d 53%,#162b31 130%);position:relative;overflow:hidden;margin-bottom:19px}.hero:after{content:"";position:absolute;width:165px;height:165px;border-radius:50%;right:-48px;top:-45px;background:radial-gradient(circle,#9a86ff50,transparent 70%);pointer-events:none}.hero h1{font-size:30px;letter-spacing:-1.2px;line-height:1.08;margin:10px 0 10px;max-width:480px}.hero p{color:#bfc1d6;line-height:1.55;max-width:420px;margin:0 0 17px}.hero-actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:0;border-radius:13px;padding:12px 15px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;transition:transform .15s,filter .15s}.btn:active{transform:scale(.98)}.btn-primary{background:var(--accent);color:#171227}.btn-secondary{background:#ffffff0c;color:var(--text);border:1px solid #ffffff1b}.btn-small{min-height:36px;padding:8px 11px;border-radius:11px;font-size:12px}.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:26px}.stat{background:#141621;border:1px solid #25283a;border-radius:15px;padding:12px 10px}.stat strong{display:block;font-size:16px;letter-spacing:-.4px}.stat span{font-size:10px;color:var(--muted);display:block;margin-top:4px;line-height:1.35}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:24px 0 13px}.section-head h2{font-size:19px;letter-spacing:-.5px;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.text-btn{border:0;background:none;color:#b5a9ff;font-size:12px;font-weight:800;padding:8px 0}.search-wrap{position:relative;margin:0 0 13px}.search-wrap .search-icon{position:absolute;left:15px;top:13px;color:#898ea6;font-size:17px}.search-wrap input{padding:14px 15px 14px 43px;width:100%;border-radius:15px;background:#171925;border:1px solid var(--line);color:var(--text);outline:none;font-size:14px}.search-wrap input::placeholder{color:#777d95}.categories{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.categories::-webkit-scrollbar{display:none}.cat-chip{white-space:nowrap;background:#151722;border:1px solid var(--line);color:#aeb2c6;padding:9px 13px;border-radius:999px;font-size:12px;font-weight:750}.cat-chip.active{color:#1a1530;background:#b5a8ff;border-color:#b5a8ff}.listing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.listing-card{background:linear-gradient(155deg,#1b1e2b,#151722 72%);border:1px solid #292d40;border-radius:20px;padding:12px;min-width:0;position:relative;overflow:hidden}.card-art{height:112px;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg,#44396c,#22283d)}.card-art:before,.card-art:after{content:"";position:absolute;border:1px solid #ffffff20;border-radius:50%;width:110px;height:110px;right:-28px;top:-48px}.card-art:after{width:75px;height:75px;left:-18px;bottom:-42px;top:auto}.card-art .art-icon{font-size:39px;filter:drop-shadow(0 4px 10px #090a1480);z-index:1}.art-community{background:linear-gradient(135deg,#245c63,#242c45)}.art-creator{background:linear-gradient(135deg,#633e70,#2b2948)}.art-other{background:linear-gradient(135deg,#674b33,#29263f)}.badge{position:absolute;top:9px;left:9px;border:1px solid #ffffff24;background:#10111ac7;backdrop-filter:blur(8px);padding:5px 7px;border-radius:8px;color:#dfdcff;font-size:9px;font-weight:850}.heart{position:absolute;right:8px;top:7px;width:32px;height:32px;border-radius:10px;background:#10111ac7;border:1px solid #ffffff24;color:white;font-size:15px;z-index:2}.heart.saved{color:#ff8aa7}.card-category{font-size:10px;color:var(--accent2);font-weight:800;margin:0 0 6px}.card-title{font-size:14px;line-height:1.32;letter-spacing:-.2px;font-weight:800;margin:0 0 9px;min-height:37px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.seller{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:10px;margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.seller-dot{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#303449;color:#ddd7ff;font-size:9px;font-weight:900;flex:0 0 19px}.card-bottom{display:flex;justify-content:space-between;align-items:center;gap:7px}.price{font-size:17px;font-weight:900;letter-spacing:-.5px}.price small{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:0}.empty{border:1px dashed #34384e;border-radius:18px;padding:28px 20px;text-align:center;color:var(--muted);grid-column:1/-1}.empty b{display:block;color:var(--text);margin-bottom:6px}.view{display:none;animation:fade .18s ease}.view.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}.page-title{font-size:26px;letter-spacing:-.8px;margin:4px 0 7px}.page-subtitle{color:var(--muted);line-height:1.5;margin:0 0 21px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:21px;padding:17px;margin-bottom:15px}.panel h3{font-size:15px;margin:0 0 8px}.panel p{color:var(--muted);font-size:12px;line-height:1.55;margin:0}.form{display:grid;gap:14px}.field{display:grid;gap:7px}.field label{font-weight:750;font-size:12px;color:#dcdff0}.field input,.field select,.field textarea{width:100%;border:1px solid #34384d;background:#10121b;color:var(--text);border-radius:13px;padding:13px 12px;min-height:45px;outline:none}.field textarea{min-height:105px;resize:vertical;line-height:1.5}.field small{color:var(--muted);font-size:10px;line-height:1.4}.notice{display:flex;gap:10px;border:1px solid #3e3b5c;background:#201d32;color:#c9c6e9;padding:12px;border-radius:14px;font-size:11px;line-height:1.5;margin-bottom:17px}.notice strong{color:#eeeaff}.notice.warning{border-color:#594a30;background:#2b251b;color:#e6d3ac}.order-item{padding:13px 0;border-bottom:1px solid #292d40;display:flex;justify-content:space-between;gap:12px}.order-item:last-child{border-bottom:0;padding-bottom:0}.order-item:first-child{padding-top:0}.order-item h4{font-size:13px;margin:0 0 5px}.order-item p{font-size:11px;color:var(--muted);margin:0;line-height:1.45}.status{display:inline-block;border-radius:7px;padding:5px 7px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.4px;background:#38314f;color:#c7baff;white-space:nowrap}.status.active{background:#18382f;color:#7ce2bd}.status.rejected{background:#462630;color:#ffa1b0}.profile-card{display:flex;align-items:center;gap:14px;padding:18px}.profile-avatar{height:58px;width:58px;border-radius:20px;flex:0 0 58px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(140deg,#6ce5c4,#9a86ff);color:#151421;font-size:22px;font-weight:900}.profile-avatar img{height:100%;width:100%;object-fit:cover}.profile-card h3{font-size:17px;margin:0 0 4px}.profile-card p{color:var(--muted);margin:0;font-size:12px}.profile-meta{display:grid;gap:0;margin-top:12px}.profile-row{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #2a2d3d;font-size:12px}.profile-row:last-child{border:0}.profile-row span{color:var(--muted)}.profile-row strong{text-align:right;overflow-wrap:anywhere}.bottom-nav{position:fixed;z-index:20;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,100%);padding:9px 12px calc(9px + var(--safe-bottom));background:#11121bf2;backdrop-filter:blur(18px);border-top:1px solid #2a2d40;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}.nav-btn{background:transparent;border:0;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#82879f;border-radius:13px;font-size:10px;font-weight:750}.nav-btn .nav-icon{font-size:19px;line-height:1.1}.nav-btn.active{background:#252039;color:#c6baff}.nav-btn.sell-nav .nav-icon{background:var(--accent);color:#171227;border-radius:12px;padding:7px 15px;margin-top:-14px;box-shadow:0 5px 14px #8f7bff25}.modal-backdrop{position:fixed;inset:0;z-index:50;background:#06070dd9;backdrop-filter:blur(7px);display:none;align-items:end;justify-content:center;padding:12px 12px calc(12px + var(--safe-bottom))}.modal-backdrop.open{display:flex}.modal{width:min(540px,100%);max-height:88vh;overflow:auto;background:#171925;border:1px solid #34374c;border-radius:25px;padding:19px;box-shadow:0 25px 90px #0008}.modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.modal-top h3{font-size:17px;margin:0}.icon-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:11px;background:#222535;color:#fff}.detail-art{height:135px;border-radius:17px;display:grid;place-items:center;font-size:52px;margin-bottom:16px;background:linear-gradient(135deg,#44396c,#22283d)}.detail-title{font-size:22px;line-height:1.2;letter-spacing:-.7px;margin:0 0 10px}.detail-desc{color:#b1b5ca;line-height:1.6;font-size:13px;white-space:pre-wrap}.detail-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:18px;margin-top:15px;border-top:1px solid #303447}.toast{position:fixed;z-index:80;bottom:calc(92px + var(--safe-bottom));left:50%;transform:translate(-50%,12px);width:calc(100% - 32px);max-width:480px;border:1px solid #40445a;background:#202331;color:white;padding:13px 15px;border-radius:13px;box-shadow:0 10px 36px #0006;opacity:0;pointer-events:none;transition:.2s;line-height:1.4;font-size:12px}.toast.show{opacity:1;transform:translate(-50%,0)}.footer-note{text-align:center;color:#656b82;font-size:10px;line-height:1.6;margin:28px 6px 8px}.hide{display:none!important}.loading{color:var(--muted);font-size:12px;padding:20px 0}.divider{height:1px;background:#2b2e40;margin:17px 0}
+    @media(min-width:600px){.app{padding:26px 22px 35px}.hero{padding:27px 28px}.hero h1{font-size:36px}.listing-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.card-art{height:125px}.bottom-nav{border:1px solid #2a2d40;border-bottom:0;border-radius:20px 20px 0 0;padding-left:22px;padding-right:22px}.modal-backdrop{align-items:center}.modal{max-height:82vh}}
+    @media(max-width:360px){.app{padding-left:12px;padding-right:12px}.brandname{font-size:16px}.hero h1{font-size:27px}.profile-chip{max-width:112px}.listing-grid{gap:9px}.listing-card{padding:9px}.card-art{height:92px}.card-title{font-size:12px}.price{font-size:15px}.card-bottom .btn{padding:7px 8px;font-size:10px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><div class="brandmark">ID</div><div><div class="brandname">ID<span>Bazaar</span></div><div class="tagline">DIGITAL ID MARKETPLACE</div></div></div>
+      <button class="profile-chip" id="topProfile" type="button" aria-label="Open profile"><span class="avatar" id="topAvatar">U</span><span class="profile-name" id="topName">Telegram user</span></button>
+    </header>
+
+    <section class="view active" id="view-home">
+      <div class="hero"><div class="eyebrow">A marketplace made simple</div><h1>Your next digital identity starts here.</h1><p>Explore listings, send a purchase request, or submit an eligible digital asset for review — all inside Telegram.</p><div class="hero-actions"><button class="btn btn-primary" type="button" data-go="explore">Explore listings <span>↗</span></button><button class="btn btn-secondary" type="button" data-go="sell">＋ List an item</button></div></div>
+      <div class="stats"><div class="stat"><strong id="statListings">—</strong><span>Available listings</span></div><div class="stat"><strong>Telegram</strong><span>Profile connected in app</span></div><div class="stat"><strong>Review first</strong><span>New listings checked</span></div></div>
+      <div class="section-head"><div><h2>Featured listings</h2><p>Browse the latest available items</p></div><button class="text-btn" type="button" data-go="explore">View all ↗</button></div>
+      <div class="listing-grid" id="homeGrid"><div class="loading">Loading listings…</div></div>
+      <div class="footer-note">Only list digital assets you own and are allowed to transfer. Never share passwords, OTPs, recovery codes or private personal data.</div>
+    </section>
+
+    <section class="view" id="view-explore">
+      <div class="eyebrow">Find your next item</div><h1 class="page-title">Explore marketplace</h1><p class="page-subtitle">Search the available listings and check details before sending a request.</p>
+      <div class="search-wrap"><span class="search-icon">⌕</span><input id="searchInput" type="search" placeholder="Search listings or categories…" autocomplete="off" aria-label="Search listings"></div>
+      <div class="categories" id="categories"></div>
+      <div class="section-head"><div><h2 id="exploreCount">All listings</h2><p>Prices shown in Indian rupees</p></div><button class="text-btn" id="clearSearch" type="button">Clear</button></div>
+      <div class="listing-grid" id="exploreGrid"><div class="loading">Loading listings…</div></div>
+      <div class="footer-note">A purchase request is not a completed sale. Check platform policies and agree on safe, permitted transfer steps before proceeding.</div>
+    </section>
+
+    <section class="view" id="view-sell">
+      <div class="eyebrow">Grow the marketplace</div><h1 class="page-title">List an item</h1><p class="page-subtitle">Share the basics. Your listing stays hidden until an admin reviews it.</p>
+      <div class="notice warning"><span>⚠</span><div><strong>Keep it safe and permitted.</strong><br>Do not submit passwords, OTPs, recovery codes, cookies, session tokens, personal data, stolen accounts or assets whose transfer the platform prohibits.</div></div>
+      <form class="panel form" id="sellForm">
+        <div class="field"><label for="sellTitle">Listing title</label><input id="sellTitle" name="title" minlength="4" maxlength="70" placeholder="e.g. Digital creator profile" required></div>
+        <div class="field"><label for="sellCategory">Category</label><select id="sellCategory" name="category" required><option value="Gaming">Gaming</option><option value="Community">Community</option><option value="Creator">Creator</option><option value="Other">Other</option></select></div>
+        <div class="field"><label for="sellPrice">Asking price (₹)</label><input id="sellPrice" name="price" type="number" inputmode="numeric" min="1" max="1000000" step="1" placeholder="499" required><small>Enter a whole number. No payment is collected by this app.</small></div>
+        <div class="field"><label for="sellDescription">Description</label><textarea id="sellDescription" name="description" minlength="12" maxlength="500" placeholder="Describe what is included and any transfer limits. Do not add login details." required></textarea><small>12–500 characters. Avoid personal or confidential information.</small></div>
+        <button class="btn btn-primary" type="submit" id="submitListing">Submit for review ↗</button>
+      </form>
+      <div class="panel"><h3>What happens next?</h3><p>1. The listing is saved as pending. 2. An admin reviews it. 3. Approved items appear in Explore. Buyers can send a request; this starter app does not collect payment.</p></div>
+    </section>
+
+    <section class="view" id="view-orders">
+      <div class="eyebrow">Your activity</div><h1 class="page-title">Requests & orders</h1><p class="page-subtitle">See purchase requests you made and requests related to your own listings.</p>
+      <div class="panel" id="ordersPanel"><div class="loading">Sign in through Telegram to load your activity.</div></div>
+      <button class="btn btn-secondary" id="refreshOrders" type="button">↻ Refresh activity</button>
+    </section>
+
+    <section class="view" id="view-profile">
+      <div class="eyebrow">Your account</div><h1 class="page-title">Profile</h1><p class="page-subtitle">Your identity comes from Telegram Mini App data.</p>
+      <div class="panel profile-card"><div class="profile-avatar" id="profileAvatar">U</div><div><h3 id="profileFullName">Telegram user</h3><p id="profileUsername">Open inside Telegram for your verified profile.</p></div></div>
+      <div class="panel"><div class="profile-meta"><div class="profile-row"><span>Telegram user ID</span><strong id="profileId">Not connected</strong></div><div class="profile-row"><span>Account mode</span><strong id="profileMode">Preview</strong></div><div class="profile-row"><span>Wishlist</span><strong id="profileSaved">0 saved items</strong></div></div></div>
+      <div class="panel"><h3>Marketplace rules</h3><p>List only items you own and are permitted to transfer. Do not upload or sell credentials, private personal data, stolen accounts, or items prohibited by the relevant platform. Purchase requests do not guarantee a sale.</p></div>
+      <div class="panel hide" id="adminPanel"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><h3>Admin review queue</h3><p>Approve or reject pending listing submissions.</p></div><span class="status" id="pendingCount">0 pending</span></div><div class="divider"></div><div id="adminQueue"><div class="loading">Loading queue…</div></div></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="nav-btn active" data-tab="home" type="button"><span class="nav-icon">⌂</span><span>Home</span></button>
+    <button class="nav-btn" data-tab="explore" type="button"><span class="nav-icon">⌕</span><span>Explore</span></button>
+    <button class="nav-btn sell-nav" data-tab="sell" type="button"><span class="nav-icon">＋</span><span>Sell</span></button>
+    <button class="nav-btn" data-tab="orders" type="button"><span class="nav-icon">▤</span><span>Orders</span></button>
+    <button class="nav-btn" data-tab="profile" type="button"><span class="nav-icon">◉</span><span>Profile</span></button>
+  </nav>
+
+  <div class="modal-backdrop" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle" aria-hidden="true">
+    <div class="modal"><div class="modal-top"><span class="eyebrow">Listing details</span><button class="icon-btn" id="closeModal" type="button" aria-label="Close details">✕</button></div><div class="detail-art" id="detailArt">🎮</div><div class="card-category" id="detailCategory"></div><h2 class="detail-title" id="detailTitle"></h2><div class="seller" id="detailSeller"></div><p class="detail-desc" id="detailDescription"></p><div class="detail-foot"><div class="price" id="detailPrice"></div><button class="btn btn-primary" id="requestOrder" type="button">Request to buy ↗</button></div><p class="footer-note" style="text-align:left;margin:13px 0 0">This creates a request only; no payment is taken in this app.</p></div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const tg = window.Telegram?.WebApp;
+      if (tg) { try { tg.ready(); tg.expand(); } catch (_) {} }
+      const initData = tg?.initData || '';
+      const telegramUser = tg?.initDataUnsafe?.user || null;
+      const state = { listings: [], category: 'All', search: '', current: null, isAdmin: false, pending: [], orders: [], saved: new Set() };
+      const $ = id => document.getElementById(id);
+      const money = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(Number(value) || 0);
+      const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+      const iconFor = category => ({Gaming:'🎮',Community:'🌐',Creator:'✦',Other:'◈'}[category] || '◈');
+      const classFor = category => ({Gaming:'',Community:'art-community',Creator:'art-creator',Other:'art-other'}[category] || '');
+      let toastTimer;
+
+      function toast(message) {
+        $('toast').textContent = message;
+        $('toast').classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => $('toast').classList.remove('show'), 3400);
+      }
+      async function api(action, options = {}) {
+        const headers = { 'Content-Type': 'application/json' };
+        if (initData) headers['X-Telegram-Init-Data'] = initData;
+        const response = await fetch(`/api?action=${encodeURIComponent(action)}`, {
+          method: options.method || 'GET', headers,
+          ...(options.body ? { body: JSON.stringify(options.body) } : {})
+        });
+        let data = {};
+        try { data = await response.json(); } catch (_) {}
+        if (!response.ok) throw new Error(data.error || `Request failed (${response.status}).`);
+        return data;
+      }
+      function setUser() {
+        const user = telegramUser;
+        const fullName = user ? [user.first_name, user.last_name].filter(Boolean).join(' ') : 'Guest preview';
+        const initials = (fullName.trim()[0] || 'U').toUpperCase();
+        $('topName').textContent = user ? (user.first_name || 'Telegram user') : 'Preview mode';
+        $('topAvatar').textContent = initials;
+        $('profileFullName').textContent = fullName;
+        $('profileUsername').textContent = user?.username ? `@${user.username}` : (user ? 'Telegram account connected' : 'Open inside Telegram for your profile');
+        $('profileId').textContent = user?.id ? String(user.id) : 'Not connected';
+        $('profileMode').textContent = initData ? 'Telegram Mini App' : 'Browser preview';
+        if (user?.photo_url) {
+          const image1 = document.createElement('img'); image1.src = user.photo_url; image1.alt = 'Telegram profile photo'; $('topAvatar').replaceChildren(image1);
+          const image2 = document.createElement('img'); image2.src = user.photo_url; image2.alt = 'Telegram profile photo'; $('profileAvatar').replaceChildren(image2);
+        } else { $('profileAvatar').textContent = initials; }
+      }
+      function renderCategories() {
+        const categories = ['All', 'Gaming', 'Community', 'Creator', 'Other'];
+        $('categories').innerHTML = categories.map(category => `<button class="cat-chip ${state.category === category ? 'active' : ''}" type="button" data-category="${category}">${category === 'All' ? '✦ ' : ''}${category}</button>`).join('');
+      }
+      function filteredListings() {
+        const query = state.search.toLowerCase().trim();
+        return state.listings.filter(item => (state.category === 'All' || item.category === state.category) && (!query || `${item.title} ${item.category} ${item.description} ${item.sellerName}`.toLowerCase().includes(query)));
+      }
+      function cardHTML(item) {
+        const saved = state.saved.has(item.id);
+        return `<article class="listing-card"><div class="card-art ${classFor(item.category)}"><span class="badge">${escapeHTML(item.category)}</span><button class="heart ${saved ? 'saved' : ''}" data-save="${escapeHTML(item.id)}" type="button" aria-label="${saved ? 'Remove from' : 'Add to'} wishlist">${saved ? '♥' : '♡'}</button><span class="art-icon">${iconFor(item.category)}</span></div><div class="card-category">${escapeHTML(item.category.toUpperCase())}</div><h3 class="card-title">${escapeHTML(item.title)}</h3><div class="seller"><span class="seller-dot">${escapeHTML((item.sellerName || 'S')[0].toUpperCase())}</span><span>${escapeHTML(item.sellerName || 'Verified seller')}</span></div><div class="card-bottom"><div class="price">${money(item.price)}<br><small>asking price</small></div><button class="btn btn-secondary btn-small" data-detail="${escapeHTML(item.id)}" type="button">Details ↗</button></div></article>`;
+      }
+      function fillGrid(element, items, limit) {
+        const subset = typeof limit === 'number' ? items.slice(0, limit) : items;
+        if (!subset.length) {
+          element.innerHTML = `<div class="empty"><b>No listings found</b>Try another search or choose a different category.</div>`;
+          return;
+        }
+        element.innerHTML = subset.map(cardHTML).join('');
+      }
+      function renderListings() {
+        fillGrid($('homeGrid'), state.listings, 4);
+        const filtered = filteredListings();
+        fillGrid($('exploreGrid'), filtered);
+        $('exploreCount').textContent = `${filtered.length} ${filtered.length === 1 ? 'listing' : 'listings'}`;
+        $('statListings').textContent = String(state.listings.length);
+        renderCategories();
+      }
+      function go(tab) {
+        const valid = ['home','explore','sell','orders','profile'];
+        if (!valid.includes(tab)) tab = 'home';
+        document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.id === `view-${tab}`));
+        document.querySelectorAll('.nav-btn').forEach(button => button.classList.toggle('active', button.dataset.tab === tab));
+        if (tab === 'orders') loadOrders();
+        if (tab === 'profile' && state.isAdmin) loadAdmin();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      function openDetail(id) {
+        const item = state.listings.find(entry => entry.id === id);
+        if (!item) return toast('This listing is no longer available. Refresh and try again.');
+        state.current = item;
+        $('detailArt').className = `detail-art ${classFor(item.category)}`;
+        $('detailArt').textContent = iconFor(item.category);
+        $('detailCategory').textContent = item.category.toUpperCase();
+        $('detailTitle').textContent = item.title;
+        $('detailSeller').innerHTML = `<span class="seller-dot">${escapeHTML((item.sellerName || 'S')[0].toUpperCase())}</span><span>${escapeHTML(item.sellerName || 'Seller')}${item.sellerUsername ? ` · @${escapeHTML(item.sellerUsername)}` : ''}</span>`;
+        $('detailDescription').textContent = item.description;
+        $('detailPrice').textContent = money(item.price);
+        $('detailModal').classList.add('open');
+        $('detailModal').setAttribute('aria-hidden', 'false');
+        if (tg?.HapticFeedback) { try { tg.HapticFeedback.impactOccurred('light'); } catch (_) {} }
+      }
+      function closeDetail() { $('detailModal').classList.remove('open'); $('detailModal').setAttribute('aria-hidden','true'); }
+      function renderOrders(items) {
+        if (!items.length) { $('ordersPanel').innerHTML = '<div class="empty"><b>No activity yet</b>Purchase requests and listing-related activity will show up here.</div>'; return; }
+        $('ordersPanel').innerHTML = items.map(order => `<div class="order-item"><div><h4>${escapeHTML(order.listingTitle || 'Marketplace request')}</h4><p>${escapeHTML(order.id)} · ${new Date(order.createdAt).toLocaleString()}<br>${escapeHTML(order.buyerName || 'Buyer')}</p></div><div style="text-align:right"><div class="price" style="font-size:14px">${money(order.price)}</div><span class="status">${escapeHTML(order.status || 'requested')}</span></div></div>`).join('');
+      }
+      async function loadOrders() {
+        $('ordersPanel').innerHTML = '<div class="loading">Loading activity…</div>';
+        try { const data = await api('orders'); state.orders = data.orders || []; renderOrders(state.orders); }
+        catch (error) { $('ordersPanel').innerHTML = `<div class="empty"><b>Open in Telegram</b>${escapeHTML(error.message)}<br><br>When deployed, open this mini app from its Telegram bot to securely load your activity.</div>`; }
+      }
+      async function loadAdmin() {
+        $('adminPanel').classList.remove('hide');
+        $('adminQueue').innerHTML = '<div class="loading">Loading queue…</div>';
+        try {
+          const data = await api('admin');
+          state.pending = data.pending || [];
+          $('pendingCount').textContent = `${state.pending.length} pending`;
+          if (!state.pending.length) { $('adminQueue').innerHTML = '<div class="empty"><b>Queue is clear</b>No pending listings to review.</div>'; return; }
+          $('adminQueue').innerHTML = state.pending.map(item => `<div class="order-item"><div><h4>${escapeHTML(item.title)}</h4><p>${escapeHTML(item.category)} · ${money(item.price)}<br>${escapeHTML(item.sellerName || 'Seller')}<br>${escapeHTML(item.description)}</p><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-primary btn-small" data-moderate="active" data-id="${escapeHTML(item.id)}" type="button">Approve</button><button class="btn btn-ghost btn-small" data-moderate="rejected" data-id="${escapeHTML(item.id)}" type="button">Reject</button></div></div><span class="status">Pending</span></div>`).join('');
+        } catch (error) { $('adminQueue').innerHTML = `<div class="empty"><b>Admin queue unavailable</b>${escapeHTML(error.message)}</div>`; }
+      }
+      async function loadCatalog() {
+        try {
+          const data = await api('catalog');
+          state.listings = data.listings || [];
+          state.isAdmin = Boolean(data.isAdmin);
+          state.pending = data.pending || [];
+          renderListings();
+          if (state.isAdmin) $('adminPanel').classList.remove('hide');
+        } catch (error) {
+          $('homeGrid').innerHTML = `<div class="empty"><b>Could not load listings</b>${escapeHTML(error.message)}<br><br>Check that the Vercel project and JSON storage are configured.</div>`;
+          $('exploreGrid').innerHTML = $('homeGrid').innerHTML;
+        }
+      }
+
+      document.addEventListener('click', async event => {
+        const nav = event.target.closest('[data-tab]'); if (nav) return go(nav.dataset.tab);
+        const goButton = event.target.closest('[data-go]'); if (goButton) return go(goButton.dataset.go);
+        const category = event.target.closest('[data-category]');
+        if (category) { state.category = category.dataset.category; renderListings(); return; }
+        const detail = event.target.closest('[data-detail]'); if (detail) return openDetail(detail.dataset.detail);
+        const save = event.target.closest('[data-save]');
+        if (save) {
+          const id = save.dataset.save;
+          state.saved.has(id) ? state.saved.delete(id) : state.saved.add(id);
+          $('profileSaved').textContent = `${state.saved.size} saved ${state.saved.size === 1 ? 'item' : 'items'}`;
+          renderListings();
+          try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
+          return;
+        }
+        const moderate = event.target.closest('[data-moderate]');
+        if (moderate) {
+          moderate.disabled = true;
+          try {
+            const data = await api('moderate', { method: 'POST', body: { listingId: moderate.dataset.id, status: moderate.dataset.moderate } });
+            toast(data.message || 'Review saved.'); await loadCatalog(); await loadAdmin();
+          } catch (error) { toast(error.message); moderate.disabled = false; }
+        }
+      });
+      $('topProfile').addEventListener('click', () => go('profile'));
+      $('searchInput').addEventListener('input', event => { state.search = event.target.value; renderListings(); });
+      $('clearSearch').addEventListener('click', () => { state.search = ''; state.category = 'All'; $('searchInput').value = ''; renderListings(); });
+      $('closeModal').addEventListener('click', closeDetail);
+      $('detailModal').addEventListener('click', event => { if (event.target === $('detailModal')) closeDetail(); });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') closeDetail(); });
+      $('requestOrder').addEventListener('click', async () => {
+        if (!state.current) return;
+        const button = $('requestOrder'); button.disabled = true; button.textContent = 'Sending…';
+        try {
+          const data = await api('order', { method: 'POST', body: { listingId: state.current.id } });
+          closeDetail(); toast(data.message || 'Purchase request sent.'); go('orders');
+        } catch (error) { toast(error.message); }
+        finally { button.disabled = false; button.textContent = 'Request to buy ↗'; }
+      });
+      $('sellForm').addEventListener('submit', async event => {
+        event.preventDefault();
+        const button = $('submitListing'); button.disabled = true; button.textContent = 'Submitting…';
+        const body = {
+          title: $('sellTitle').value,
+          category: $('sellCategory').value,
+          price: $('sellPrice').value,
+          description: $('sellDescription').value
+        };
+        try {
+          const data = await api('sell', { method: 'POST', body });
+          $('sellForm').reset(); toast(data.message || 'Listing submitted for review.'); go('profile');
+        } catch (error) { toast(error.message); }
+        finally { button.disabled = false; button.textContent = 'Submit for review ↗'; }
+      });
+      $('refreshOrders').addEventListener('click', loadOrders);
+      setUser();
+      loadCatalog();
+    })();
+  </script>
+</body>
+</html>

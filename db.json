@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "listings": [
+    {
+      "id": "demo-101",
+      "title": "Level 45 Gaming Profile",
+      "category": "Gaming",
+      "description": "Example listing for a transferable game profile. Confirm the game's rules before making a request.",
+      "price": 799,
+      "sellerId": "seed-seller-1",
+      "sellerName": "PixelStore",
+      "sellerUsername": "pixelstore_demo",
+      "status": "active",
+      "createdAt": "2026-10-20T12:00:00.000Z"
+    },
+    {
+      "id": "demo-102",
+      "title": "Creator Community Handle",
+      "category": "Community",
+      "description": "Example community identity listing. Transfer only if the platform allows it and you own the rights to transfer it.",
+      "price": 499,
+      "sellerId": "seed-seller-2",
+      "sellerName": "NovaMarket",
+      "sellerUsername": "novamarket_demo",
+      "status": "active",
+      "createdAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "id": "demo-103",
+      "title": "Indie Game Starter ID",
+      "category": "Gaming",
+      "description": "Demo item with starter progress. Review the platform's transfer policy before purchase.",
+      "price": 299,
+      "sellerId": "seed-seller-3",
+      "sellerName": "ArcadeHub",
+      "sellerUsername": "arcadehub_demo",
+      "status": "active",
+      "createdAt": "2026-10-18T12:00:00.000Z"
+    },
+    {
+      "id": "demo-104",
+      "title": "Digital Creator Profile",
+      "category": "Creator",
+      "description": "Example listing for an identity or profile asset that is explicitly permitted to transfer.",
+      "price": 999,
+      "sellerId": "seed-seller-4",
+      "sellerName": "MintDigital",
+      "sellerUsername": "mintdigital_demo",
+      "status": "active",
+      "createdAt": "2026-10-17T12:00:00.000Z"
+    }
+  ],
+  "orders": []
+}
