@@ -12,7 +12,13 @@ const ADMIN_TELEGRAM_ID = process.env.ADMIN_TELEGRAM_ID || '';
 const HAS_BLOB = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 const isProduction = process.env.NODE_ENV === 'production';
 const clone = value => JSON.parse(JSON.stringify(value));
-const allowedCategories = new Set(['Gaming', 'Community', 'Creator', 'Other']);
+
+const ADMIN_USERNAME = 'savan';
+const ADMIN_PASSWORD = 'savanishere';
+const ADMIN_SESSION_SECRET = 'ff_savan_admin_secret_key_2026';
+const ADMIN_TOKEN_HASH = createHmac('sha256', ADMIN_SESSION_SECRET)
+  .update(`${ADMIN_USERNAME}:${ADMIN_PASSWORD}`)
+  .digest('hex');
 
 function send(res, status, payload) {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -79,7 +85,7 @@ function verifyInitData(initData) {
 
 function caller(req, required = false) {
   const initData = req.headers['x-telegram-init-data'] || '';
-  if (!initData && !isProduction && process.env.ALLOW_DEMO_AUTH === 'true') {
+  if (!initData && (!isProduction || process.env.ALLOW_DEMO_AUTH === 'true')) {
     return { id: '100000001', firstName: 'Demo User', lastName: '', username: 'demo_user', photoUrl: '' };
   }
   if (!initData && !required) return null;
@@ -90,8 +96,14 @@ function caller(req, required = false) {
   }
 }
 
-function isAdmin(user) {
-  return Boolean(user && ADMIN_TELEGRAM_ID && user.id === String(ADMIN_TELEGRAM_ID));
+function verifyAdminSession(req) {
+  const token = req.headers['x-admin-token'] || req.headers['authorization']?.replace('Bearer ', '');
+  if (token && token === ADMIN_TOKEN_HASH) return true;
+
+  const user = caller(req, false);
+  if (user && ADMIN_TELEGRAM_ID && user.id === String(ADMIN_TELEGRAM_ID)) return true;
+
+  return false;
 }
 
 async function readBlobDB() {
@@ -103,9 +115,8 @@ async function readBlobDB() {
         contentType: 'application/json; charset=utf-8'
       });
     } catch (error) {
-      // Another request may have initialized the same file first. Read it below.
       if (!String(error?.message || '').toLowerCase().includes('exist') && error?.name !== 'BlobAlreadyExistsError') {
-        // A subsequent read gives a clearer error if this was not an initialization race.
+        // Blob race condition handled silently
       }
     }
     result = await get(DB_PATH, { access: 'private', useCache: false });
@@ -180,17 +191,14 @@ async function notifyAdmin(text) {
   }
 }
 
-function cleanText(value, max) {
+function cleanText(value, max = 250) {
   return String(value || '').replace(/[<>]/g, '').trim().slice(0, max);
 }
 
-function publicListing(listing) {
-  return {
-    id: listing.id, title: listing.title, category: listing.category,
-    description: listing.description, price: listing.price,
-    sellerName: listing.sellerName, sellerUsername: listing.sellerUsername,
-    status: listing.status, createdAt: listing.createdAt
-  };
+function isUserBanned(db, user) {
+  if (!user) return false;
+  const bannedList = db.bannedUsers || [];
+  return bannedList.some(b => String(b.id) === String(user.id) || (user.username && String(b.username).toLowerCase() === String(user.username).toLowerCase()));
 }
 
 export default async function handler(req, res) {
@@ -198,107 +206,294 @@ export default async function handler(req, res) {
   const action = requestAction(req);
 
   try {
+    // 1. ADMIN LOGIN
+    if (req.method === 'POST' && action === 'admin-login') {
+      const body = requestBody(req);
+      const username = cleanText(body.username, 50);
+      const password = cleanText(body.password, 50);
+
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        return send(res, 200, {
+          success: true,
+          token: ADMIN_TOKEN_HASH,
+          message: 'Admin access granted successfully.'
+        });
+      }
+      return send(res, 401, { error: 'Invalid admin username or password.' });
+    }
+
+    // 2. PUBLIC CATALOG
     if (req.method === 'GET' && action === 'catalog') {
       const user = caller(req, false);
       const { db } = await readDB();
-      const active = (db.listings || []).filter(item => item.status === 'active').sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
-      const response = {
-        listings: active.map(publicListing),
-        categories: ['All', ...allowedCategories],
-        isAdmin: isAdmin(user),
+      const banned = isUserBanned(db, user);
+
+      const activeListings = (db.listings || []).filter(item => item.status === 'active')
+        .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+
+      return send(res, 200, {
+        settings: db.settings || {
+          upiId: 'savan@upi',
+          qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=savan@upi',
+          supportTelegram: 'savanofficial',
+          noticeText: 'Free Fire ID Marketplace'
+        },
+        listings: activeListings,
+        isBanned: banned,
         user: user ? { id: user.id, firstName: user.firstName, lastName: user.lastName, username: user.username, photoUrl: user.photoUrl } : null
-      };
-      if (response.isAdmin) response.pending = (db.listings || []).filter(item => item.status === 'pending').map(publicListing);
-      return send(res, 200, response);
+      });
     }
 
+    // 3. USER PAYMENT SUBMISSION
+    if (req.method === 'POST' && action === 'submit-payment') {
+      const user = caller(req, true);
+      const { db: currentDb } = await readDB();
+      if (isUserBanned(currentDb, user)) {
+        return send(res, 403, { error: 'Your account is banned by admin from submitting payment requests.' });
+      }
+
+      const body = requestBody(req);
+      const listingId = cleanText(body.listingId, 80);
+      const utrNumber = cleanText(body.utrNumber, 100);
+      const screenshotUrl = cleanText(body.screenshotUrl, 1000);
+
+      if (!listingId) return send(res, 400, { error: 'Listing ID is required.' });
+      if (!utrNumber || utrNumber.length < 4) return send(res, 400, { error: 'Valid UTR / Transaction ID is required.' });
+
+      const order = await mutateDB(db => {
+        const listing = (db.listings || []).find(item => item.id === listingId && item.status === 'active');
+        if (!listing) {
+          const error = new Error('This Free Fire ID is no longer available.');
+          error.code = 'LISTING_UNAVAILABLE';
+          throw error;
+        }
+
+        const createdOrder = {
+          id: `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
+          listingId: listing.id,
+          listingTitle: listing.title,
+          price: listing.price,
+          buyerId: user.id,
+          buyerName: [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Telegram User',
+          buyerUsername: user.username || '',
+          utrNumber,
+          screenshotUrl,
+          status: 'pending_approval',
+          createdAt: new Date().toISOString()
+        };
+
+        db.orders = db.orders || [];
+        db.orders.unshift(createdOrder);
+        return createdOrder;
+      });
+
+      await notifyAdmin(
+        `🔥 NEW FREE FIRE ID ORDER REQUEST 🔥\n` +
+        `Order ID: ${order.id}\n` +
+        `FF ID: ${order.listingTitle} (₹${order.price})\n` +
+        `UTR / Txn: ${order.utrNumber}\n` +
+        `Buyer: ${order.buyerName} (@${order.buyerUsername || 'no_user'})\n` +
+        `Proof URL: ${order.screenshotUrl || 'N/A'}\n` +
+        `Check Admin Panel /raj to Approve or Reject!`
+      );
+
+      return send(res, 201, {
+        order,
+        message: 'Payment details submitted successfully! Admin will verify and approve your order shortly.'
+      });
+    }
+
+    // 4. USER ORDERS
     if (req.method === 'GET' && action === 'orders') {
       const user = caller(req, true);
       const { db } = await readDB();
-      const ownListingIds = new Set((db.listings || []).filter(item => item.sellerId === user.id).map(item => item.id));
-      const orders = (db.orders || []).filter(order => order.buyerId === user.id || ownListingIds.has(order.listingId));
-      return send(res, 200, { orders: orders.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))) });
+      const myOrders = (db.orders || []).filter(order => String(order.buyerId) === String(user.id));
+      return send(res, 200, { orders: myOrders.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))) });
     }
 
-    if (req.method === 'GET' && action === 'admin') {
-      const user = caller(req, true);
-      if (!isAdmin(user)) return send(res, 403, { error: 'Admin access only.' });
+    // --- PROTECTED ADMIN ROUTES BELOW ---
+    const isAdmin = verifyAdminSession(req);
+
+    // 5. ADMIN FULL DATA
+    if (req.method === 'GET' && action === 'admin-data') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
       const { db } = await readDB();
       return send(res, 200, {
-        pending: (db.listings || []).filter(item => item.status === 'pending'),
-        orders: db.orders || []
+        listings: db.listings || [],
+        orders: db.orders || [],
+        bannedUsers: db.bannedUsers || [],
+        settings: db.settings || {}
       });
     }
 
-    if (req.method === 'POST' && action === 'order') {
-      const user = caller(req, true);
+    // 6. ADMIN CREATE OR UPDATE FREE FIRE LISTING
+    if (req.method === 'POST' && action === 'admin-save-listing') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
       const body = requestBody(req);
-      const listingId = cleanText(body.listingId, 80);
-      if (!listingId) return send(res, 400, { error: 'Choose a listing first.' });
-      const order = await mutateDB(db => {
-        const listing = (db.listings || []).find(item => item.id === listingId && item.status === 'active');
-        if (!listing) { const error = new Error('This listing is no longer available.'); error.code = 'LISTING_UNAVAILABLE'; throw error; }
-        if (String(listing.sellerId) === user.id) { const error = new Error('You cannot request your own listing.'); error.code = 'SELF_ORDER'; throw error; }
-        const created = {
-          id: `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
-          listingId: listing.id, listingTitle: listing.title, price: listing.price,
-          buyerId: user.id, buyerName: [user.firstName, user.lastName].filter(Boolean).join(' '),
-          buyerUsername: user.username, sellerId: listing.sellerId,
-          status: 'requested', createdAt: new Date().toISOString()
-        };
-        db.orders = db.orders || [];
-        db.orders.unshift(created);
-        return created;
-      });
-      await notifyAdmin(`🛍 New IDBazaar purchase request\nOrder: ${order.id}\nItem: ${order.listingTitle}\nPrice: ₹${order.price}\nBuyer: ${order.buyerName}${order.buyerUsername ? ` (@${order.buyerUsername})` : ''}\nStatus: request only — no payment collected.`);
-      return send(res, 201, { order, message: 'Purchase request sent. No payment has been collected.' });
-    }
 
-    if (req.method === 'POST' && action === 'sell') {
-      const user = caller(req, true);
-      const body = requestBody(req);
-      const title = cleanText(body.title, 70);
-      const category = cleanText(body.category, 20);
-      const description = cleanText(body.description, 500);
+      const listingId = body.id ? cleanText(body.id, 50) : null;
+      const title = cleanText(body.title, 100);
       const price = Number(body.price);
-      if (title.length < 4) return send(res, 400, { error: 'Title must be at least 4 characters.' });
-      if (!allowedCategories.has(category)) return send(res, 400, { error: 'Choose a valid category.' });
-      if (description.length < 12) return send(res, 400, { error: 'Description must be at least 12 characters.' });
-      if (!Number.isInteger(price) || price < 1 || price > 1000000) return send(res, 400, { error: 'Price must be between ₹1 and ₹10,00,000.' });
-      if (/password|otp|cookie|session token|recovery code|stolen|hacked/i.test(`${title} ${description}`)) {
-        return send(res, 400, { error: 'Do not list passwords, login secrets, recovery codes, or stolen/hacked accounts.' });
+      const level = Number(body.level) || 1;
+      const rank = cleanText(body.rank, 50) || 'Heroic';
+      const evoGuns = cleanText(body.evoGuns, 200);
+      const bundles = cleanText(body.bundles, 200);
+      const likes = cleanText(body.likes, 50);
+      const server = cleanText(body.server, 50) || 'India';
+      const loginType = cleanText(body.loginType, 50) || 'Facebook';
+      const uid = cleanText(body.uid, 50);
+      const description = cleanText(body.description, 1000);
+      const isFeatured = Boolean(body.isFeatured);
+      const status = ['active', 'sold', 'disabled'].includes(body.status) ? body.status : 'active';
+
+      let images = Array.isArray(body.images) ? body.images.map(img => cleanText(img, 1000)).filter(Boolean) : [];
+      if (!images.length) {
+        images = ['https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80'];
       }
-      const listing = await mutateDB(db => {
+
+      if (!title || title.length < 3) return send(res, 400, { error: 'Valid title is required.' });
+      if (!price || price < 1) return send(res, 400, { error: 'Valid price is required.' });
+
+      const savedItem = await mutateDB(db => {
         db.listings = db.listings || [];
-        const created = {
-          id: `ID-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
-          title, category, description, price, sellerId: user.id,
-          sellerName: [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Telegram seller',
-          sellerUsername: user.username, status: 'pending', createdAt: new Date().toISOString()
+        if (listingId) {
+          const index = db.listings.findIndex(item => item.id === listingId);
+          if (index !== -1) {
+            db.listings[index] = {
+              ...db.listings[index],
+              title, price, level, rank, evoGuns, bundles, likes, server, loginType, uid, images, description, isFeatured, status,
+              updatedAt: new Date().toISOString()
+            };
+            return db.listings[index];
+          }
+        }
+
+        const newListing = {
+          id: `FF-${Math.floor(1000 + Math.random() * 9000)}`,
+          title, price, level, rank, evoGuns, bundles, likes, server, loginType, uid, images, description, isFeatured, status,
+          createdAt: new Date().toISOString()
         };
-        db.listings.unshift(created);
-        return created;
+        db.listings.unshift(newListing);
+        return newListing;
       });
-      await notifyAdmin(`📥 New IDBazaar listing awaiting review\nID: ${listing.id}\nTitle: ${listing.title}\nCategory: ${listing.category}\nPrice: ₹${listing.price}\nSeller: ${listing.sellerName}${listing.sellerUsername ? ` (@${listing.sellerUsername})` : ''}\nOpen the app's admin view to approve or reject.`);
-      return send(res, 201, { listing: publicListing(listing), message: 'Listing sent for admin review.' });
+
+      return send(res, 200, { listing: savedItem, message: 'Free Fire listing saved successfully.' });
     }
 
-    if (req.method === 'POST' && action === 'moderate') {
-      const user = caller(req, true);
-      if (!isAdmin(user)) return send(res, 403, { error: 'Admin access only.' });
+    // 7. ADMIN DELETE LISTING
+    if (req.method === 'POST' && action === 'admin-delete-listing') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
       const body = requestBody(req);
       const listingId = cleanText(body.listingId, 80);
-      const status = body.status === 'active' ? 'active' : body.status === 'rejected' ? 'rejected' : '';
-      if (!listingId || !status) return send(res, 400, { error: 'Choose approve or reject.' });
-      const listing = await mutateDB(db => {
-        const item = (db.listings || []).find(entry => entry.id === listingId && entry.status === 'pending');
-        if (!item) { const error = new Error('Pending listing not found. Refresh the page.'); error.code = 'LISTING_UNAVAILABLE'; throw error; }
-        item.status = status;
-        item.reviewedAt = new Date().toISOString();
-        item.reviewedBy = user.id;
+
+      await mutateDB(db => {
+        db.listings = (db.listings || []).filter(item => item.id !== listingId);
+      });
+
+      return send(res, 200, { message: 'Listing deleted successfully.' });
+    }
+
+    // 8. ADMIN APPROVE PAYMENT
+    if (req.method === 'POST' && action === 'approve-payment') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
+      const body = requestBody(req);
+      const orderId = cleanText(body.orderId, 80);
+      const markListingAsSold = body.markListingAsSold !== false;
+
+      const order = await mutateDB(db => {
+        const item = (db.orders || []).find(o => o.id === orderId);
+        if (!item) throw new Error('Order not found.');
+        item.status = 'approved';
+        item.approvedAt = new Date().toISOString();
+
+        if (markListingAsSold && item.listingId) {
+          const listing = (db.listings || []).find(l => l.id === item.listingId);
+          if (listing) listing.status = 'sold';
+        }
         return item;
       });
-      return send(res, 200, { listing: publicListing(listing), message: status === 'active' ? 'Listing approved.' : 'Listing rejected.' });
+
+      return send(res, 200, { order, message: 'Payment approved successfully!' });
+    }
+
+    // 9. ADMIN REJECT PAYMENT
+    if (req.method === 'POST' && action === 'reject-payment') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
+      const body = requestBody(req);
+      const orderId = cleanText(body.orderId, 80);
+      const reason = cleanText(body.reason, 200) || 'Payment proof verification failed.';
+
+      const order = await mutateDB(db => {
+        const item = (db.orders || []).find(o => o.id === orderId);
+        if (!item) throw new Error('Order not found.');
+        item.status = 'rejected';
+        item.rejectReason = reason;
+        item.rejectedAt = new Date().toISOString();
+        return item;
+      });
+
+      return send(res, 200, { order, message: 'Payment request rejected.' });
+    }
+
+    // 10. ADMIN BAN USER
+    if (req.method === 'POST' && action === 'ban-user') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
+      const body = requestBody(req);
+      const userId = cleanText(body.userId, 80);
+      const username = cleanText(body.username, 80);
+      const reason = cleanText(body.reason, 200) || 'Banned by admin';
+
+      if (!userId && !username) return send(res, 400, { error: 'User ID or Username required.' });
+
+      await mutateDB(db => {
+        db.bannedUsers = db.bannedUsers || [];
+        if (!db.bannedUsers.some(b => String(b.id) === String(userId) || (username && String(b.username).toLowerCase() === username.toLowerCase()))) {
+          db.bannedUsers.push({
+            id: userId,
+            username: username,
+            reason: reason,
+            bannedAt: new Date().toISOString()
+          });
+        }
+      });
+
+      return send(res, 200, { message: 'User banned successfully.' });
+    }
+
+    // 11. ADMIN UNBAN USER
+    if (req.method === 'POST' && action === 'unban-user') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
+      const body = requestBody(req);
+      const userId = cleanText(body.userId, 80);
+
+      await mutateDB(db => {
+        db.bannedUsers = (db.bannedUsers || []).filter(b => String(b.id) !== String(userId) && String(b.username) !== String(userId));
+      });
+
+      return send(res, 200, { message: 'User unbanned successfully.' });
+    }
+
+    // 12. ADMIN UPDATE SETTINGS
+    if (req.method === 'POST' && action === 'update-settings') {
+      if (!isAdmin) return send(res, 401, { error: 'Unauthorized. Admin login required.' });
+      const body = requestBody(req);
+
+      const upiId = cleanText(body.upiId, 100);
+      const qrCodeUrl = cleanText(body.qrCodeUrl, 1000);
+      const supportTelegram = cleanText(body.supportTelegram, 100);
+      const noticeText = cleanText(body.noticeText, 300);
+
+      const updatedSettings = await mutateDB(db => {
+        db.settings = {
+          upiId: upiId || db.settings?.upiId || 'savan@upi',
+          qrCodeUrl: qrCodeUrl || db.settings?.qrCodeUrl || '',
+          supportTelegram: supportTelegram || db.settings?.supportTelegram || 'savanofficial',
+          noticeText: noticeText || db.settings?.noticeText || ''
+        };
+        return db.settings;
+      });
+
+      return send(res, 200, { settings: updatedSettings, message: 'Settings updated successfully.' });
     }
 
     return send(res, 404, { error: 'Unknown API action.' });
@@ -306,11 +501,8 @@ export default async function handler(req, res) {
     const code = error?.code || '';
     const status = code === 'STORAGE_NOT_CONFIGURED' ? 503
       : ['LISTING_UNAVAILABLE', 'DB_CONFLICT'].includes(code) ? 409
-      : code === 'SELF_ORDER' ? 400
-      : /BOT_TOKEN is not configured/i.test(error?.message || '') ? 503
-      : /Open this mini app|Telegram authentication|Telegram session|Telegram user data/i.test(error?.message || '') ? 401
       : 500;
-    if (status >= 500) console.error('IDBazaar API error:', error?.message || error);
+    if (status >= 500) console.error('FF Store API error:', error?.message || error);
     return send(res, status, { error: error?.message || 'Something went wrong. Please try again.' });
   }
 }
