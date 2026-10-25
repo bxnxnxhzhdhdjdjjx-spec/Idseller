@@ -190,7 +190,7 @@
       padding: 8px 12px calc(8px + var(--safe-bottom));
       background: rgba(13, 14, 21, 0.94); backdrop-filter: blur(16px);
       border-top: 1px solid var(--line);
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+      display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px;
     }
     .nav-btn {
       background: transparent; border: 0; padding: 8px 0;
@@ -342,6 +342,35 @@
 
       <div id="myOrdersList">
         <div style="color:var(--muted); padding:20px;">Loading orders…</div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: MY PROFILE -->
+    <section class="view" id="view-profile">
+      <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 16px;">
+        <div class="avatar" id="profileBigAvatar" style="width: 70px; height: 70px; font-size: 28px; margin: 0 auto 12px; border: 2px solid var(--ff-orange); box-shadow: 0 0 15px var(--ff-orange-glow);">U</div>
+        <h2 id="profileFullName" style="margin: 0 0 4px; font-size: 20px; font-weight: 900;">User</h2>
+        <div id="profileUsername" style="color: var(--ff-gold); font-size: 13px; font-weight: 700; margin-bottom: 12px;">@username</div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 230, 118, 0.1); border: 1px solid var(--ff-green); color: var(--ff-green); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 999px;">
+          ✓ Verified Telegram User
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px;">
+        <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center;">
+          <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase;">Telegram User ID</div>
+          <div id="profileUserId" style="font-size: 15px; font-weight: 900; color: #fff; margin-top: 4px;">100000001</div>
+        </div>
+        <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center;">
+          <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase;">Total Orders</div>
+          <div id="profileOrderCount" style="font-size: 15px; font-weight: 900; color: var(--ff-gold); margin-top: 4px;">0</div>
+        </div>
+      </div>
+
+      <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 16px;">
+        <h4 style="margin: 0 0 10px; font-size: 14px; font-weight: 800; color: #fff;">Account & Store Support</h4>
+        <p style="font-size: 12px; color: var(--muted); margin: 0 0 14px; line-height: 1.5;">Need help with your purchase or account transfer? Contact official store support directly on Telegram.</p>
+        <button class="btn btn-primary" id="profileSupportBtn" style="width: 100%; min-height: 44px;" type="button">💬 Contact Official Support</button>
       </div>
     </section>
 
@@ -506,6 +535,7 @@
   <nav class="bottom-nav">
     <button class="nav-btn active" data-tab="store" type="button"><span class="nav-icon">🎮</span><span>Store</span></button>
     <button class="nav-btn" data-tab="orders" type="button"><span class="nav-icon">🧾</span><span>My Orders</span></button>
+    <button class="nav-btn" data-tab="profile" type="button"><span class="nav-icon">👤</span><span>Profile</span></button>
     <button class="nav-btn" id="adminNavBtn" data-tab="admin" type="button" style="display:none;"><span class="nav-icon">⚡</span><span>Admin Panel</span></button>
   </nav>
 
@@ -690,6 +720,32 @@
         $(`view-${tab}`)?.classList.add('active');
         document.querySelector(`.nav-btn[data-tab="${tab}"]`)?.classList.add('active');
         if (tab === 'orders') loadUserOrders();
+        if (tab === 'profile') loadUserProfile();
+      }
+
+      async function loadUserProfile() {
+        const u = telegramUser || (state.user ? state.user : null);
+        const name = u ? ([u.first_name || u.firstName, u.last_name || u.lastName].filter(Boolean).join(' ') || 'User') : 'User';
+        const username = u?.username ? `@${u.username}` : 'No username set';
+        const userId = u?.id || '100000001';
+
+        $('profileFullName').textContent = name;
+        $('profileUsername').textContent = username;
+        $('profileUserId').textContent = userId;
+
+        if (u?.photo_url || u?.photoUrl) {
+          $('profileBigAvatar').innerHTML = `<img src="${u.photo_url || u.photoUrl}" alt="avatar">`;
+        } else {
+          $('profileBigAvatar').textContent = name[0].toUpperCase();
+        }
+
+        try {
+          const data = await api('orders');
+          const orders = data.orders || [];
+          $('profileOrderCount').textContent = orders.length;
+        } catch (_) {
+          $('profileOrderCount').textContent = '0';
+        }
       }
 
       function renderStore() {
@@ -1123,6 +1179,11 @@
       });
 
       $('contactSupportBtn').addEventListener('click', () => {
+        const sup = state.settings.supportTelegram || 'savanofficial';
+        window.open(`https://t.me/${sup.replace('@','')}`, '_blank');
+      });
+
+      $('profileSupportBtn')?.addEventListener('click', () => {
         const sup = state.settings.supportTelegram || 'savanofficial';
         window.open(`https://t.me/${sup.replace('@','')}`, '_blank');
       });
