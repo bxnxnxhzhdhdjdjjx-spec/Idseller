@@ -1,54 +1,56 @@
 {
-  "version": 1,
+  "version": 2,
+  "settings": {
+    "upiId": "savan@upi",
+    "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=savan@upi&pn=FreeFireIDStore",
+    "supportTelegram": "savanofficial",
+    "noticeText": "Only official admin approved Free Fire IDs listed. Fast delivery upon QR / UPI payment approval."
+  },
   "listings": [
     {
-      "id": "demo-101",
-      "title": "Level 45 Gaming Profile",
-      "category": "Gaming",
-      "description": "Example listing for a transferable game profile. Confirm the game's rules before making a request.",
-      "price": 799,
-      "sellerId": "seed-seller-1",
-      "sellerName": "PixelStore",
-      "sellerUsername": "pixelstore_demo",
+      "id": "FF-1001",
+      "title": "Level 72 Grandmaster FF ID - Cobra MP40 & HipHop Bundle",
+      "price": 2499,
+      "level": 72,
+      "rank": "Grandmaster",
+      "evoGuns": "MP40 Cobra Max (Lvl 7), AK Blue Flame (Lvl 5)",
+      "bundles": "Hip Hop Bundle, Sakura Bundle, Bunny Warrior",
+      "likes": "14,500+",
+      "server": "India",
+      "loginType": "Facebook",
+      "uid": "184920482",
+      "images": [
+        "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&auto=format&fit=crop&q=80"
+      ],
+      "description": "Ultra rare OG Free Fire ID. Has Season 2 Elite Pass HipHop Bundle, Cobra MP40 Max, and 14.5K+ likes. 100% safe Facebook login. Managed exclusively by Admin.",
       "status": "active",
-      "createdAt": "2026-10-20T12:00:00.000Z"
+      "isFeatured": true,
+      "createdAt": "2026-10-25T10:00:00.000Z"
     },
     {
-      "id": "demo-102",
-      "title": "Creator Community Handle",
-      "category": "Community",
-      "description": "Example community identity listing. Transfer only if the platform allows it and you own the rights to transfer it.",
-      "price": 499,
-      "sellerId": "seed-seller-2",
-      "sellerName": "NovaMarket",
-      "sellerUsername": "novamarket_demo",
+      "id": "FF-1002",
+      "title": "Level 68 Heroic ID - Draco AK Max & Criminal Bundle",
+      "price": 1799,
+      "level": 68,
+      "rank": "Heroic",
+      "evoGuns": "AK Blue Flame Draco Max (Lvl 7), M1014 Dragon",
+      "bundles": "Red Criminal Bundle, Breakdancer Bundle",
+      "likes": "9,200+",
+      "server": "India",
+      "loginType": "Google",
+      "uid": "209482019",
+      "images": [
+        "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80"
+      ],
+      "description": "Top tier competitive account with Red Criminal bundle and Draco AK Max level. Google login setup ready.",
       "status": "active",
-      "createdAt": "2026-10-19T12:00:00.000Z"
-    },
-    {
-      "id": "demo-103",
-      "title": "Indie Game Starter ID",
-      "category": "Gaming",
-      "description": "Demo item with starter progress. Review the platform's transfer policy before purchase.",
-      "price": 299,
-      "sellerId": "seed-seller-3",
-      "sellerName": "ArcadeHub",
-      "sellerUsername": "arcadehub_demo",
-      "status": "active",
-      "createdAt": "2026-10-18T12:00:00.000Z"
-    },
-    {
-      "id": "demo-104",
-      "title": "Digital Creator Profile",
-      "category": "Creator",
-      "description": "Example listing for an identity or profile asset that is explicitly permitted to transfer.",
-      "price": 999,
-      "sellerId": "seed-seller-4",
-      "sellerName": "MintDigital",
-      "sellerUsername": "mintdigital_demo",
-      "status": "active",
-      "createdAt": "2026-10-17T12:00:00.000Z"
+      "isFeatured": false,
+      "createdAt": "2026-10-24T14:30:00.000Z"
     }
   ],
-  "orders": []
+  "orders": [],
+  "bannedUsers": []
 }
