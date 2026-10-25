@@ -51,6 +51,20 @@
       "createdAt": "2026-10-24T14:30:00.000Z"
     }
   ],
-  "orders": [],
+  "orders": [
+    {
+      "id": "ORD-MVO7CAX5-WIZK",
+      "listingId": "FF-1001",
+      "listingTitle": "Level 72 Grandmaster FF ID - Cobra MP40 & HipHop Bundle",
+      "price": 2499,
+      "buyerId": "100000001",
+      "buyerName": "Demo User",
+      "buyerUsername": "demo_user",
+      "utrNumber": "123456789012",
+      "screenshotUrl": "",
+      "status": "pending_approval",
+      "createdAt": "2026-10-25T19:09:42.089Z"
+    }
+  ],
   "bannedUsers": []
 }

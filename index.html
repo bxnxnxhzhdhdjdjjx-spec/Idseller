@@ -3,298 +3,360 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0d0e15">
-  <meta name="description" content="Free Fire ID Store - Official Marketplace for Verified FF IDs">
-  <title>Free Fire ID Store · Esports Marketplace</title>
+  <meta name="theme-color" content="#08090e">
+  <meta name="description" content="Free Fire ID Store - Official Cyber Esports Marketplace for Verified FF IDs">
+  <title>Free Fire ID Store · Esports Cyber Marketplace</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0b0c10;
-      --card-bg: #13151f;
-      --panel: #181a26;
-      --line: #26293b;
-      --line-bright: #3a3f5c;
-      --text: #f5f6ff;
-      --muted: #8b90a7;
-      --ff-orange: #ff5500;
-      --ff-orange-glow: rgba(255, 85, 0, 0.35);
-      --ff-gold: #ffb700;
-      --ff-gold-glow: rgba(255, 183, 0, 0.3);
-      --ff-red: #ff3355;
-      --ff-green: #00e676;
-      --radius: 18px;
+      --bg: #07080c;
+      --bg-card: #0e111a;
+      --bg-panel: #141824;
+      --border: #1e2436;
+      --border-bright: #2d3652;
+      --text: #f0f3ff;
+      --text-muted: #838eb0;
+
+      /* Neon Cyber Colors */
+      --cyan: #00f2fe;
+      --cyan-glow: rgba(0, 242, 254, 0.3);
+      --orange: #ff5500;
+      --orange-glow: rgba(255, 85, 0, 0.35);
+      --gold: #ffd700;
+      --gold-glow: rgba(255, 215, 0, 0.3);
+      --purple: #9d4edd;
+      --red: #ff2a55;
+      --green: #00ff88;
+      --green-glow: rgba(0, 255, 136, 0.3);
+
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
+
     * { box-sizing: border-box; }
     html { background: var(--bg); scroll-behavior: smooth; }
     body {
       margin: 0;
-      background: radial-gradient(circle at 50% -10%, #291206 0%, var(--bg) 60%), var(--bg);
+      background: radial-gradient(circle at 50% -20%, #17112c 0%, #08090e 60%, var(--bg) 100%);
       color: var(--text);
-      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       font-size: 14px;
       min-height: 100vh;
       padding-bottom: calc(90px + var(--safe-bottom));
+      overflow-x: hidden;
     }
+
     button, input, select, textarea { font: inherit; }
-    button { cursor: pointer; border: 0; }
+    button { cursor: pointer; border: 0; background: none; color: inherit; }
     button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-      outline: 2px solid var(--ff-orange);
+      outline: 2px solid var(--cyan);
       outline-offset: 2px;
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .app { max-width: 800px; margin: 0 auto; padding: 16px 14px 30px; }
 
+    /* Custom Esports Branding Logo SVG */
+    .brand-logo-svg {
+      width: 44px; height: 44px; filter: drop-shadow(0 0 10px var(--cyan-glow));
+      transition: transform 0.2s ease;
+    }
+    .brand-logo-svg:hover { transform: scale(1.05) rotate(-2deg); }
+
     /* Topbar */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; margin-bottom: 18px;
+      gap: 12px; margin-bottom: 20px;
     }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brandmark {
-      width: 42px; height: 42px; border-radius: 12px;
-      display: grid; place-items: center;
-      background: linear-gradient(135deg, #ff6600, #b32d00);
-      box-shadow: 0 0 15px var(--ff-orange-glow);
-      font-weight: 900; font-size: 20px; color: #fff;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brandname {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px; font-weight: 900; letter-spacing: -0.5px; line-height: 1;
+      background: linear-gradient(135deg, #ffffff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .brandname { font-size: 19px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.1; }
-    .brandname span { color: var(--ff-orange); }
-    .tagline { color: var(--ff-gold); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+    .brandname span {
+      background: linear-gradient(135deg, var(--orange), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .tagline { color: var(--cyan); font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; display: flex; align-items: center; gap: 4px; }
 
     .profile-chip {
       display: flex; align-items: center; gap: 8px;
-      background: var(--card-bg); border: 1px solid var(--line);
+      background: rgba(20, 24, 36, 0.8); border: 1px solid var(--border-bright);
+      backdrop-filter: blur(10px);
       border-radius: 999px; padding: 4px 12px 4px 5px; color: var(--text);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     .avatar {
-      width: 30px; height: 30px; border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%;
       display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--ff-orange), var(--ff-gold));
-      color: #000; font-weight: 900; font-size: 13px; overflow: hidden;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      color: #000; font-weight: 900; font-size: 14px; overflow: hidden;
+      border: 1.5px solid var(--cyan);
     }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .profile-name { font-size: 12px; font-weight: 700; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* Notice Banner */
     .notice-banner {
-      background: linear-gradient(90deg, rgba(255,85,0,0.15), rgba(255,183,0,0.1));
-      border: 1px solid var(--ff-orange); border-radius: 12px;
-      padding: 10px 14px; font-size: 12px; color: #ffebcc;
-      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+      background: linear-gradient(90deg, rgba(0,242,254,0.1) 0%, rgba(255,85,0,0.12) 100%);
+      border: 1px solid rgba(0,242,254,0.3); border-radius: var(--radius-md);
+      padding: 12px 16px; font-size: 12px; color: #e1f5fe;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+      backdrop-filter: blur(8px);
     }
-    .notice-banner span { font-size: 18px; }
+    .notice-banner i { color: var(--cyan); flex-shrink: 0; }
 
     /* Hero Banner */
     .hero {
-      border: 1px solid var(--line-bright); border-radius: 22px;
-      padding: 22px 18px;
-      background: linear-gradient(135deg, #21110a 0%, #13151f 70%, #0d1222 100%);
-      position: relative; overflow: hidden; margin-bottom: 18px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      border: 1px solid var(--border-bright); border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      background: linear-gradient(135deg, rgba(20, 24, 36, 0.95) 0%, rgba(14, 17, 26, 0.98) 100%),
+                  radial-gradient(circle at 90% 10%, rgba(0, 242, 254, 0.15), transparent 50%);
+      position: relative; overflow: hidden; margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .hero::after {
-      content: "🔥"; position: absolute; right: -10px; top: -10px;
-      font-size: 110px; opacity: 0.12; pointer-events: none;
+    .hero-glow {
+      position: absolute; right: -20px; top: -20px; width: 180px; height: 180px;
+      background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
+      pointer-events: none;
     }
     .hero-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(255, 85, 0, 0.2); border: 1px solid var(--ff-orange);
-      color: var(--ff-orange); font-size: 10px; font-weight: 800;
-      padding: 4px 10px; border-radius: 999px; text-transform: uppercase; margin-bottom: 10px;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0, 242, 254, 0.1); border: 1px solid var(--cyan);
+      color: var(--cyan); font-size: 11px; font-weight: 800;
+      padding: 5px 12px; border-radius: 999px; text-transform: uppercase; margin-bottom: 12px;
+      font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
     }
-    .hero h1 { font-size: 26px; font-weight: 900; letter-spacing: -0.8px; margin: 0 0 8px; line-height: 1.15; }
-    .hero p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; max-width: 480px; }
+    .hero h1 { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin: 0 0 8px; line-height: 1.2; }
+    .hero p { color: var(--text-muted); font-size: 13px; line-height: 1.6; margin: 0 0 18px; max-width: 520px; }
 
     .btn {
-      border: 0; border-radius: 12px; padding: 11px 18px; font-weight: 800; font-size: 13px;
+      border: 0; border-radius: var(--radius-md); padding: 12px 20px; font-weight: 800; font-size: 13px;
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      transition: transform 0.15s, filter 0.15s;
+      transition: all 0.2s ease; text-decoration: none;
     }
     .btn:active { transform: scale(0.97); }
     .btn-primary {
-      background: linear-gradient(135deg, var(--ff-orange), #e64a00);
-      color: #fff; box-shadow: 0 4px 15px var(--ff-orange-glow);
+      background: linear-gradient(135deg, var(--cyan) 0%, #00a8ff 100%);
+      color: #040814; font-weight: 900; box-shadow: 0 4px 20px var(--cyan-glow);
     }
-    .btn-secondary { background: var(--panel); color: var(--text); border: 1px solid var(--line); }
+    .btn-primary:hover { box-shadow: 0 6px 25px rgba(0,242,254,0.5); }
+    .btn-secondary { background: var(--bg-panel); color: var(--text); border: 1px solid var(--border-bright); }
     .btn-gold {
-      background: linear-gradient(135deg, var(--ff-gold), #d49700);
-      color: #000; box-shadow: 0 4px 15px var(--ff-gold-glow);
+      background: linear-gradient(135deg, var(--gold), #e6b800);
+      color: #000; font-weight: 900; box-shadow: 0 4px 15px var(--gold-glow);
     }
-    .btn-danger { background: var(--ff-red); color: #fff; }
-    .btn-small { padding: 6px 12px; font-size: 11px; border-radius: 8px; }
+    .btn-danger { background: var(--red); color: #fff; font-weight: 800; }
+    .btn-small { padding: 7px 12px; font-size: 11px; border-radius: var(--radius-sm); }
 
     /* Filters & Search */
-    .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; scrollbar-width: none; }
+    .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; scrollbar-width: none; }
     .filter-bar::-webkit-scrollbar { display: none; }
     .chip {
-      white-space: nowrap; background: var(--card-bg); border: 1px solid var(--line);
-      color: var(--muted); padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      white-space: nowrap; background: var(--bg-card); border: 1px solid var(--border);
+      color: var(--text-muted); padding: 9px 16px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; gap: 6px; transition: all 0.2s;
     }
-    .chip.active { background: var(--ff-orange); color: #fff; border-color: var(--ff-orange); }
+    .chip.active { background: var(--cyan); color: #040814; border-color: var(--cyan); font-weight: 800; box-shadow: 0 0 12px var(--cyan-glow); }
 
     /* Listings Grid */
-    .listing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .listing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     @media (min-width: 600px) { .listing-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
     .ff-card {
-      background: var(--card-bg); border: 1px solid var(--line);
-      border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
-      position: relative; transition: border-color 0.2s;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column;
+      position: relative; transition: all 0.25s ease;
     }
-    .ff-card:hover { border-color: var(--ff-orange); }
+    .ff-card:hover { border-color: var(--cyan); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,242,254,0.15); }
     .ff-card-media {
-      height: 130px; position: relative; background: #1a1c29; overflow: hidden;
+      height: 135px; position: relative; background: #121522; overflow: hidden;
     }
-    .ff-card-media img { width: 100%; height: 100%; object-fit: cover; }
+    .ff-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .ff-card:hover .ff-card-media img { transform: scale(1.06); }
+
     .ff-badge-rank {
       position: absolute; top: 8px; left: 8px;
-      background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
-      border: 1px solid var(--ff-gold); color: var(--ff-gold);
-      font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px;
+      background: rgba(8, 9, 14, 0.85); backdrop-filter: blur(6px);
+      border: 1px solid var(--gold); color: var(--gold);
+      font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
+      display: flex; align-items: center; gap: 4px;
     }
     .ff-badge-level {
       position: absolute; top: 8px; right: 8px;
-      background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
-      color: #fff; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px;
+      background: rgba(8, 9, 14, 0.85); backdrop-filter: blur(6px);
+      border: 1px solid var(--cyan); color: var(--cyan);
+      font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
     }
     .ff-card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; }
     .ff-card-title {
-      font-size: 13px; font-weight: 800; margin: 0 0 8px; line-height: 1.3;
+      font-size: 13px; font-weight: 800; margin: 0 0 8px; line-height: 1.35; color: #fff;
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
-    .ff-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+    .ff-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
     .tag {
-      background: rgba(255,255,255,0.06); border: 1px solid var(--line);
-      font-size: 9px; color: var(--muted); padding: 2px 6px; border-radius: 4px; font-weight: 600;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      font-size: 9px; color: var(--text-muted); padding: 3px 7px; border-radius: 5px; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 3px;
     }
     .ff-card-foot {
       margin-top: auto; display: flex; align-items: center; justify-content: space-between;
-      border-top: 1px solid var(--line); padding-top: 8px;
+      border-top: 1px solid var(--border); padding-top: 10px;
     }
-    .price-tag { font-size: 16px; font-weight: 900; color: #fff; }
-    .price-tag small { font-size: 10px; color: var(--muted); font-weight: 500; }
+    .price-tag { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; color: var(--gold); }
+    .price-tag small { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9px; color: var(--text-muted); font-weight: 600; display: block; }
 
     /* Views */
-    .view { display: none; animation: fadeIn 0.2s ease; }
+    .view { display: none; animation: fadeIn 0.25s ease; }
     .view.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
     /* Navigation Bar */
     .bottom-nav {
       position: fixed; z-index: 40; left: 50%; bottom: 0; transform: translateX(-50%);
       width: min(800px, 100%);
       padding: 8px 12px calc(8px + var(--safe-bottom));
-      background: rgba(13, 14, 21, 0.94); backdrop-filter: blur(16px);
-      border-top: 1px solid var(--line);
+      background: rgba(8, 9, 14, 0.95); backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-bright);
       display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px;
     }
     .nav-btn {
       background: transparent; border: 0; padding: 8px 0;
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      color: var(--muted); font-size: 10px; font-weight: 700; border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      color: var(--text-muted); font-size: 10px; font-weight: 700; border-radius: 12px;
+      transition: all 0.2s ease;
     }
-    .nav-btn .nav-icon { font-size: 20px; line-height: 1; }
-    .nav-btn.active { color: var(--ff-orange); background: rgba(255, 85, 0, 0.1); }
+    .nav-btn i { font-size: 18px; width: 20px; height: 20px; }
+    .nav-btn.active { color: var(--cyan); background: rgba(0, 242, 254, 0.08); font-weight: 800; }
 
     /* Modals */
     .modal-backdrop {
       position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      background: rgba(4, 6, 12, 0.88); backdrop-filter: blur(10px);
       display: none; align-items: center; justify-content: center;
       padding: 14px calc(14px + var(--safe-bottom));
     }
     .modal-backdrop.open { display: flex; }
     .modal {
       width: min(560px, 100%); max-height: 88vh; overflow-y: auto;
-      background: var(--panel); border: 1px solid var(--line-bright);
-      border-radius: 24px; padding: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      background: var(--bg-panel); border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg); padding: 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     }
-    .modal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .modal-top h3 { margin: 0; font-size: 18px; font-weight: 900; }
-    .icon-btn { width: 34px; height: 34px; border-radius: 10px; background: var(--card-bg); border: 1px solid var(--line); color: #fff; }
+    .modal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .modal-top h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; color: #fff; }
+    .icon-btn { width: 34px; height: 34px; border-radius: 10px; background: var(--bg-card); border: 1px solid var(--border); color: #fff; display: grid; place-items: center; }
 
     /* Image Gallery / Carousel in Modal */
-    .gallery-container { position: relative; border-radius: 16px; overflow: hidden; height: 220px; background: #000; margin-bottom: 14px; }
+    .gallery-container { position: relative; border-radius: var(--radius-md); overflow: hidden; height: 220px; background: #000; margin-bottom: 16px; border: 1px solid var(--border); }
     .gallery-slide { width: 100%; height: 100%; object-fit: cover; display: none; }
     .gallery-slide.active { display: block; }
     .gallery-nav {
-      position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 8px; pointer-events: none;
+      position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; pointer-events: none;
     }
     .gallery-btn {
-      pointer-events: auto; width: 32px; height: 32px; border-radius: 50%;
-      background: rgba(0,0,0,0.6); color: #fff; font-size: 16px; display: grid; place-items: center;
+      pointer-events: auto; width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(0,0,0,0.7); color: #fff; border: 1px solid rgba(255,255,255,0.2); display: grid; place-items: center;
     }
     .gallery-dots {
-      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 6px; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 999px;
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 999px; backdrop-filter: blur(4px);
     }
     .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); }
-    .dot.active { background: var(--ff-orange); width: 14px; border-radius: 999px; }
+    .dot.active { background: var(--cyan); width: 16px; border-radius: 999px; }
 
     /* Spec Grid */
-    .spec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 14px 0; }
-    .spec-item { background: var(--card-bg); border: 1px solid var(--line); padding: 10px 12px; border-radius: 10px; }
-    .spec-item label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; font-weight: 700; }
-    .spec-item span { font-size: 13px; font-weight: 800; color: #fff; }
+    .spec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 16px 0; }
+    .spec-item { background: var(--bg-card); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-sm); }
+    .spec-item label { display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px; }
+    .spec-item span { font-size: 14px; font-weight: 800; color: #fff; }
 
     /* Form Styles */
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .form-control {
-      width: 100%; background: var(--card-bg); border: 1px solid var(--line);
-      color: #fff; border-radius: 10px; padding: 11px 12px; font-size: 13px; outline: none;
+      width: 100%; background: var(--bg-card); border: 1px solid var(--border-bright);
+      color: #fff; border-radius: var(--radius-sm); padding: 12px 14px; font-size: 13px; outline: none;
+      transition: border-color 0.2s;
     }
-    .form-control:focus { border-color: var(--ff-orange); }
+    .form-control:focus { border-color: var(--cyan); }
     textarea.form-control { min-height: 80px; resize: vertical; }
 
     /* Admin Panel Styling */
-    .admin-container { background: #0f111a; border: 1px solid var(--ff-orange); border-radius: 20px; padding: 18px; margin-top: 10px; }
-    .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 14px; }
-    .admin-tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 14px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
-    .admin-tab { background: var(--card-bg); border: 1px solid var(--line); color: var(--muted); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; }
-    .admin-tab.active { background: var(--ff-orange); color: #fff; border-color: var(--ff-orange); }
+    .admin-container { background: var(--bg-panel); border: 1px solid var(--cyan); border-radius: var(--radius-lg); padding: 20px; margin-top: 10px; box-shadow: 0 0 30px rgba(0,242,254,0.1); }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 16px; }
+    .admin-tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; scrollbar-width: none; }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .admin-tab { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+    .admin-tab.active { background: var(--cyan); color: #040814; border-color: var(--cyan); font-weight: 800; }
 
-    .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+    .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
     @media (min-width: 500px) { .stats-row { grid-template-columns: repeat(4, 1fr); } }
-    .stat-card { background: var(--card-bg); border: 1px solid var(--line); padding: 12px; border-radius: 12px; text-align: center; }
-    .stat-card h4 { font-size: 18px; margin: 0 0 4px; color: var(--ff-gold); font-weight: 900; }
-    .stat-card p { font-size: 10px; color: var(--muted); margin: 0; text-transform: uppercase; font-weight: 700; }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); padding: 14px; border-radius: var(--radius-md); text-align: center; }
+    .stat-card h4 { font-family: 'Orbitron', sans-serif; font-size: 18px; margin: 0 0 4px; color: var(--gold); font-weight: 900; }
+    .stat-card p { font-size: 10px; color: var(--text-muted); margin: 0; text-transform: uppercase; font-weight: 700; }
 
     .toast {
-      position: fixed; z-index: 200; bottom: calc(80px + var(--safe-bottom)); left: 50%; transform: translate(-50%, 20px);
-      background: #1c1f2e; border: 1px solid var(--ff-orange); color: #fff;
+      position: fixed; z-index: 200; bottom: calc(85px + var(--safe-bottom)); left: 50%; transform: translate(-50%, 20px);
+      background: var(--bg-panel); border: 1px solid var(--cyan); color: #fff;
       padding: 12px 20px; border-radius: 12px; font-size: 12px; font-weight: 700;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8); opacity: 0; pointer-events: none; transition: 0.2s;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8); opacity: 0; pointer-events: none; transition: all 0.25s ease;
+      display: flex; align-items: center; gap: 8px;
     }
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
     .banned-overlay {
-      position: fixed; inset: 0; z-index: 300; background: #000;
+      position: fixed; inset: 0; z-index: 300; background: #04060c;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 20px; text-align: center; color: var(--ff-red);
+      padding: 20px; text-align: center; color: var(--red);
     }
-    .banned-overlay h1 { font-size: 32px; margin-bottom: 10px; }
+    .banned-overlay h1 { font-family: 'Orbitron', sans-serif; font-size: 28px; margin-bottom: 10px; }
   </style>
 </head>
 <body>
   <!-- BANNED OVERLAY -->
   <div id="bannedScreen" class="banned-overlay" style="display:none;">
-    <h1>🚫 ACCESS BANNED</h1>
-    <p style="color:#fff; max-width:400px;">Your Telegram account has been banned by the Administrator from accessing Free Fire Store. Contact support if you believe this is an error.</p>
+    <i data-lucide="shield-alert" style="width:64px; height:64px; margin-bottom:16px;"></i>
+    <h1>ACCESS BANNED</h1>
+    <p style="color:#fff; max-width:400px; line-height:1.5;">Your Telegram account has been banned by the Administrator from accessing Free Fire Store. Contact official store support if you believe this is an error.</p>
   </div>
 
   <main class="app">
     <!-- Topbar -->
     <header class="topbar">
       <div class="brand">
-        <div class="brandmark">FF</div>
+        <!-- Premium Free Fire Esports Shield Logo SVG -->
+        <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 5 L90 20 L80 70 L50 95 L20 70 L10 20 Z" fill="url(#logo-grad)" stroke="#00f2fe" stroke-width="3"/>
+          <path d="M50 15 L78 27 L70 65 L50 84 L30 65 L22 27 Z" fill="#08090e" opacity="0.9"/>
+          <!-- Wings & Flames -->
+          <path d="M35 35 L50 25 L65 35 L60 55 L50 70 L40 55 Z" fill="url(#fire-grad)"/>
+          <circle cx="50" cy="45" r="8" fill="#ffd700"/>
+          <defs>
+            <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100">
+              <stop offset="0%" stop-color="#00f2fe"/>
+              <stop offset="100%" stop-color="#7b2cbf"/>
+            </linearGradient>
+            <linearGradient id="fire-grad" x1="0" y1="0" x2="0" y2="100">
+              <stop offset="0%" stop-color="#ff5500"/>
+              <stop offset="100%" stop-color="#ffd700"/>
+            </linearGradient>
+          </defs>
+        </svg>
         <div>
           <div class="brandname">FreeFire<span>STORE</span></div>
-          <div class="tagline">Official ID Marketplace</div>
+          <div class="tagline"><i data-lucide="check-check" style="width:12px; height:12px;"></i> Official ID Marketplace</div>
         </div>
       </div>
       <div class="profile-chip">
@@ -305,93 +367,103 @@
 
     <!-- Notice Banner -->
     <div class="notice-banner" id="noticeBanner">
-      <span>🔥</span>
-      <div id="noticeText">Official Admin Managed Free Fire ID Store. 100% Safe & Instant Delivery.</div>
+      <i data-lucide="flame"></i>
+      <div id="noticeText">Official Admin Managed Free Fire ID Store. 100% Verified Escrow Delivery.</div>
     </div>
 
     <!-- VIEW 1: HOME / STORE CATALOG -->
     <section class="view active" id="view-store">
       <div class="hero">
-        <div class="hero-badge">Verified Esports Accounts</div>
-        <h1>Buy Premium Free Fire Accounts</h1>
-        <p>Grandmaster IDs, Cobra MP40, Criminal Bundles, Season 2 OG Accounts with 100% Admin Escrow Safety.</p>
-        <div style="display:flex; gap:10px;">
-          <button class="btn btn-primary" type="button" onclick="document.getElementById('exploreSection').scrollIntoView({behavior:'smooth'})">Explore IDs ⬇</button>
-          <button class="btn btn-secondary" type="button" id="contactSupportBtn">💬 Support</button>
+        <div class="hero-glow"></div>
+        <div class="hero-badge"><i data-lucide="award" style="width:12px; height:12px;"></i> Verified Esports Accounts</div>
+        <h1>BUY PREMIUM FREE FIRE ACCOUNTS</h1>
+        <p>Grandmaster IDs, Cobra MP40 Max, Red Criminal Bundles, Season 2 OG Elite Passes with 100% Escrow Admin Safety.</p>
+        <div style="display:flex; gap:12px;">
+          <button class="btn btn-primary" type="button" onclick="document.getElementById('exploreSection').scrollIntoView({behavior:'smooth'})">Explore Accounts <i data-lucide="arrow-down" style="width:16px; height:16px;"></i></button>
+          <button class="btn btn-secondary" type="button" id="contactSupportBtn"><i data-lucide="message-square" style="width:16px; height:16px;"></i> Support</button>
         </div>
       </div>
 
       <div id="exploreSection">
         <div class="filter-bar" id="rankFilters">
-          <button class="chip active" data-rank="All">All Ranks</button>
-          <button class="chip" data-rank="Grandmaster">Grandmaster</button>
-          <button class="chip" data-rank="Heroic">Heroic</button>
-          <button class="chip" data-rank="Diamond">Diamond</button>
+          <button class="chip active" data-rank="All"><i data-lucide="grid" style="width:14px; height:14px;"></i> All Ranks</button>
+          <button class="chip" data-rank="Grandmaster"><i data-lucide="crown" style="width:14px; height:14px;"></i> Grandmaster</button>
+          <button class="chip" data-rank="Heroic"><i data-lucide="shield" style="width:14px; height:14px;"></i> Heroic</button>
+          <button class="chip" data-rank="Diamond"><i data-lucide="gem" style="width:14px; height:14px;"></i> Diamond</button>
         </div>
 
         <div class="listing-grid" id="storeGrid">
-          <div style="color:var(--muted); padding:20px; grid-column:1/-1;">Loading Free Fire IDs…</div>
+          <div style="color:var(--text-muted); padding:30px; grid-column:1/-1; text-align:center;">Loading Free Fire IDs…</div>
         </div>
       </div>
     </section>
 
     <!-- VIEW 2: MY ORDERS -->
     <section class="view" id="view-orders">
-      <h2 style="margin:0 0 6px; font-weight:900;">My Payment Orders</h2>
-      <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">Track your submitted payments and ID delivery status.</p>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <i data-lucide="receipt" style="width:24px; height:24px; color:var(--cyan);"></i>
+        <h2 style="margin:0; font-family:'Orbitron', sans-serif; font-size:20px; font-weight:900;">MY PAYMENT ORDERS</h2>
+      </div>
+      <p style="color:var(--text-muted); font-size:12px; margin-bottom:20px;">Track your submitted payments and account transfer status.</p>
 
       <div id="myOrdersList">
-        <div style="color:var(--muted); padding:20px;">Loading orders…</div>
+        <div style="color:var(--text-muted); padding:20px;">Loading orders…</div>
       </div>
     </section>
 
-    <!-- VIEW 4: MY PROFILE -->
+    <!-- VIEW 3: MY PROFILE -->
     <section class="view" id="view-profile">
-      <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 16px;">
-        <div class="avatar" id="profileBigAvatar" style="width: 70px; height: 70px; font-size: 28px; margin: 0 auto 12px; border: 2px solid var(--ff-orange); box-shadow: 0 0 15px var(--ff-orange-glow);">U</div>
-        <h2 id="profileFullName" style="margin: 0 0 4px; font-size: 20px; font-weight: 900;">User</h2>
-        <div id="profileUsername" style="color: var(--ff-gold); font-size: 13px; font-weight: 700; margin-bottom: 12px;">@username</div>
-        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 230, 118, 0.1); border: 1px solid var(--ff-green); color: var(--ff-green); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 999px;">
-          ✓ Verified Telegram User
+      <div style="background: var(--bg-card); border: 1px solid var(--border-bright); border-radius: var(--radius-lg); padding: 24px; text-align: center; margin-bottom: 16px; position: relative; overflow: hidden;">
+        <div class="avatar" id="profileBigAvatar" style="width: 76px; height: 76px; font-size: 30px; margin: 0 auto 14px; border: 2px solid var(--cyan); box-shadow: 0 0 20px var(--cyan-glow);">U</div>
+        <h2 id="profileFullName" style="margin: 0 0 4px; font-size: 20px; font-weight: 900; color:#fff;">User</h2>
+        <div id="profileUsername" style="color: var(--cyan); font-size: 13px; font-weight: 700; margin-bottom: 14px;">@username</div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 255, 136, 0.1); border: 1px solid var(--green); color: var(--green); font-size: 11px; font-weight: 800; padding: 5px 14px; border-radius: 999px;">
+          <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i> Verified Telegram User
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px;">
-        <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center;">
-          <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase;">Telegram User ID</div>
-          <div id="profileUserId" style="font-size: 15px; font-weight: 900; color: #fff; margin-top: 4px;">100000001</div>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; text-align: center;">
+          <div style="font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">Telegram User ID</div>
+          <div id="profileUserId" style="font-family:'Orbitron', sans-serif; font-size: 15px; font-weight: 900; color: #fff;">100000001</div>
         </div>
-        <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center;">
-          <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase;">Total Orders</div>
-          <div id="profileOrderCount" style="font-size: 15px; font-weight: 900; color: var(--ff-gold); margin-top: 4px;">0</div>
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; text-align: center;">
+          <div style="font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">Total Orders</div>
+          <div id="profileOrderCount" style="font-family:'Orbitron', sans-serif; font-size: 15px; font-weight: 900; color: var(--gold);">0</div>
         </div>
       </div>
 
-      <div style="background: var(--card-bg); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 16px;">
-        <h4 style="margin: 0 0 10px; font-size: 14px; font-weight: 800; color: #fff;">Account & Store Support</h4>
-        <p style="font-size: 12px; color: var(--muted); margin: 0 0 14px; line-height: 1.5;">Need help with your purchase or account transfer? Contact official store support directly on Telegram.</p>
-        <button class="btn btn-primary" id="profileSupportBtn" style="width: 100%; min-height: 44px;" type="button">💬 Contact Official Support</button>
+      <div style="background: var(--bg-card); border: 1px solid var(--border-bright); border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px;">
+        <h4 style="margin: 0 0 10px; font-size: 14px; font-weight: 800; color: #fff; display:flex; align-items:center; gap:8px;">
+          <i data-lucide="headphones" style="width:18px; height:18px; color:var(--cyan);"></i> Account & Store Support
+        </h4>
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px; line-height: 1.5;">Need help with your purchase or account transfer? Contact official store support directly on Telegram.</p>
+        <button class="btn btn-primary" id="profileSupportBtn" style="width: 100%; min-height: 46px;" type="button">
+          <i data-lucide="send" style="width:16px; height:16px;"></i> Contact Official Support
+        </button>
       </div>
     </section>
 
-    <!-- VIEW 3: ADMIN PANEL (Accessed via /raj) -->
+    <!-- VIEW 4: ADMIN PANEL (Accessed via /raj) -->
     <section class="view" id="view-admin">
       <div class="admin-container">
         <div class="admin-header">
           <div>
-            <h2 style="margin:0; font-size:20px; font-weight:900; color:var(--ff-orange);">⚡ HIGHLY ADVANCED ADMIN PANEL</h2>
-            <div style="font-size:11px; color:var(--muted);">Logged in as Admin: <b>savan</b></div>
+            <h2 style="margin:0; font-family:'Orbitron', sans-serif; font-size:18px; font-weight:900; color:var(--cyan); display:flex; align-items:center; gap:8px;">
+              <i data-lucide="zap" style="width:20px; height:20px;"></i> HIGHLY ADVANCED ADMIN PANEL
+            </h2>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Logged in as Store Admin: <b style="color:#fff;">savan</b></div>
           </div>
-          <button class="btn btn-danger btn-small" type="button" id="adminLogoutBtn">Logout</button>
+          <button class="btn btn-danger btn-small" type="button" id="adminLogoutBtn"><i data-lucide="log-out" style="width:14px; height:14px;"></i> Logout</button>
         </div>
 
         <div class="admin-tabs">
-          <button class="admin-tab active" data-atab="dashboard">Dashboard</button>
-          <button class="admin-tab" data-atab="add-listing">Add / Edit FF ID</button>
-          <button class="admin-tab" data-atab="manage-listings">Manage IDs</button>
-          <button class="admin-tab" data-atab="payments">Payment Approvals</button>
-          <button class="admin-tab" data-atab="users">User Ban / Unban</button>
-          <button class="admin-tab" data-atab="settings">Store Settings</button>
+          <button class="admin-tab active" data-atab="dashboard"><i data-lucide="layout-dashboard" style="width:14px; height:14px;"></i> Dashboard</button>
+          <button class="admin-tab" data-atab="add-listing"><i data-lucide="plus-circle" style="width:14px; height:14px;"></i> Add / Edit ID</button>
+          <button class="admin-tab" data-atab="manage-listings"><i data-lucide="list" style="width:14px; height:14px;"></i> Manage IDs</button>
+          <button class="admin-tab" data-atab="payments"><i data-lucide="check-square" style="width:14px; height:14px;"></i> Payments Queue</button>
+          <button class="admin-tab" data-atab="users"><i data-lucide="user-x" style="width:14px; height:14px;"></i> Ban Users</button>
+          <button class="admin-tab" data-atab="settings"><i data-lucide="settings" style="width:14px; height:14px;"></i> Settings</button>
         </div>
 
         <!-- Admin Tab 1: Dashboard -->
@@ -402,15 +474,17 @@
             <div class="stat-card"><h4 id="statPendingPayments">0</h4><p>Pending Orders</p></div>
             <div class="stat-card"><h4 id="statBannedUsers">0</h4><p>Banned Users</p></div>
           </div>
-          <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:12px; padding:14px;">
-            <h4 style="margin:0 0 8px;">Quick Admin Actions</h4>
-            <p style="font-size:12px; color:var(--muted); margin:0;">All changes made here update live across all users. You have full control over store listings, QR payment settings, user access, and order verification.</p>
+          <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;">
+            <h4 style="margin:0 0 8px; font-size:14px; color:#fff; display:flex; align-items:center; gap:8px;">
+              <i data-lucide="shield-check" style="width:18px; height:18px; color:var(--green);"></i> Live Escrow Dashboard Active
+            </h4>
+            <p style="font-size:12px; color:var(--text-muted); margin:0; line-height:1.5;">All store updates occur in real-time. You hold full admin control over store listings, QR payment setup, order verification, and user access.</p>
           </div>
         </div>
 
         <!-- Admin Tab 2: Add/Edit Listing -->
         <div class="atab-view" id="atab-add-listing" style="display:none;">
-          <h3 id="formTitle" style="margin:0 0 14px;">Add New Free Fire ID</h3>
+          <h3 id="formTitle" style="margin:0 0 16px; font-family:'Orbitron', sans-serif;">Add New Free Fire ID</h3>
           <form id="adminListingForm">
             <input type="hidden" id="ffEditId" value="">
             <div class="form-group">
@@ -476,37 +550,39 @@
               <textarea class="form-control" id="ffDescription" placeholder="Full account details, elite pass count, gun skins..." required></textarea>
             </div>
             <div class="form-group" style="display:flex; gap:10px; align-items:center;">
-              <label style="margin:0; cursor:pointer;"><input type="checkbox" id="ffIsFeatured"> Feature on Top</label>
+              <label style="margin:0; cursor:pointer; color:#fff; display:flex; align-items:center; gap:6px;"><input type="checkbox" id="ffIsFeatured"> Feature on Top</label>
             </div>
-            <button class="btn btn-primary" type="submit" id="saveListingBtn">Publish Free Fire ID 🚀</button>
+            <button class="btn btn-primary" type="submit" id="saveListingBtn" style="width:100%; min-height:46px;">
+              <i data-lucide="upload-cloud" style="width:18px; height:18px;"></i> Publish Free Fire ID 🚀
+            </button>
           </form>
         </div>
 
         <!-- Admin Tab 3: Manage Listings -->
         <div class="atab-view" id="atab-manage-listings" style="display:none;">
-          <h3 style="margin:0 0 12px;">All Store Listings</h3>
+          <h3 style="margin:0 0 14px; font-family:'Orbitron', sans-serif;">All Store Listings</h3>
           <div id="adminListingsTable">Loading...</div>
         </div>
 
         <!-- Admin Tab 4: Payments -->
         <div class="atab-view" id="atab-payments" style="display:none;">
-          <h3 style="margin:0 0 12px;">Payment Approvals Queue</h3>
+          <h3 style="margin:0 0 14px; font-family:'Orbitron', sans-serif;">Payment Approvals Queue</h3>
           <div id="adminPaymentsList">Loading...</div>
         </div>
 
         <!-- Admin Tab 5: Users -->
         <div class="atab-view" id="atab-users" style="display:none;">
-          <h3 style="margin:0 0 12px;">User Ban Management</h3>
+          <h3 style="margin:0 0 14px; font-family:'Orbitron', sans-serif;">User Ban Management</h3>
           <div class="form-group" style="display:flex; gap:8px;">
             <input class="form-control" id="banUserId" placeholder="Telegram User ID or Username">
-            <button class="btn btn-danger" type="button" id="banUserBtn">Ban User</button>
+            <button class="btn btn-danger" type="button" id="banUserBtn" style="white-space:nowrap;"><i data-lucide="user-minus" style="width:14px; height:14px;"></i> Ban User</button>
           </div>
           <div id="bannedUsersList">Loading banned list...</div>
         </div>
 
         <!-- Admin Tab 6: Settings -->
         <div class="atab-view" id="atab-settings" style="display:none;">
-          <h3 style="margin:0 0 14px;">QR Code & Store Settings</h3>
+          <h3 style="margin:0 0 16px; font-family:'Orbitron', sans-serif;">QR Code & Store Settings</h3>
           <form id="adminSettingsForm">
             <div class="form-group">
               <label>UPI ID for Payments</label>
@@ -524,7 +600,9 @@
               <label>Top Notice Banner Text</label>
               <input class="form-control" id="setNoticeText" placeholder="Notice text displayed at top of app">
             </div>
-            <button class="btn btn-primary" type="submit">Save Store Settings 💾</button>
+            <button class="btn btn-primary" type="submit" style="width:100%; min-height:46px;">
+              <i data-lucide="save" style="width:18px; height:18px;"></i> Save Store Settings 💾
+            </button>
           </form>
         </div>
       </div>
@@ -533,10 +611,10 @@
 
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" data-tab="store" type="button"><span class="nav-icon">🎮</span><span>Store</span></button>
-    <button class="nav-btn" data-tab="orders" type="button"><span class="nav-icon">🧾</span><span>My Orders</span></button>
-    <button class="nav-btn" data-tab="profile" type="button"><span class="nav-icon">👤</span><span>Profile</span></button>
-    <button class="nav-btn" id="adminNavBtn" data-tab="admin" type="button" style="display:none;"><span class="nav-icon">⚡</span><span>Admin Panel</span></button>
+    <button class="nav-btn active" data-tab="store" type="button"><i data-lucide="gamepad-2"></i><span>Store</span></button>
+    <button class="nav-btn" data-tab="orders" type="button"><i data-lucide="receipt"></i><span>My Orders</span></button>
+    <button class="nav-btn" data-tab="profile" type="button"><i data-lucide="user"></i><span>Profile</span></button>
+    <button class="nav-btn" id="adminNavBtn" data-tab="admin" type="button" style="display:none;"><i data-lucide="zap"></i><span>Admin Panel</span></button>
   </nav>
 
   <!-- DETAIL MODAL -->
@@ -544,22 +622,22 @@
     <div class="modal">
       <div class="modal-top">
         <h3 id="detTitle">Free Fire ID Details</h3>
-        <button class="icon-btn" onclick="closeModal('detailModal')" type="button">✕</button>
+        <button class="icon-btn" onclick="closeModal('detailModal')" type="button"><i data-lucide="x" style="width:18px; height:18px;"></i></button>
       </div>
 
       <!-- Image Carousel -->
       <div class="gallery-container">
         <div id="gallerySlides"></div>
         <div class="gallery-nav">
-          <button class="gallery-btn" onclick="prevSlide()" type="button">❮</button>
-          <button class="gallery-btn" onclick="nextSlide()" type="button">❯</button>
+          <button class="gallery-btn" onclick="prevSlide()" type="button"><i data-lucide="chevron-left" style="width:18px; height:18px;"></i></button>
+          <button class="gallery-btn" onclick="nextSlide()" type="button"><i data-lucide="chevron-right" style="width:18px; height:18px;"></i></button>
         </div>
         <div class="gallery-dots" id="galleryDots"></div>
       </div>
 
       <!-- Specs -->
       <div class="spec-grid">
-        <div class="spec-item"><label>Price</label><span id="detPrice" style="color:var(--ff-gold); font-size:16px;">₹0</span></div>
+        <div class="spec-item"><label>Price</label><span id="detPrice" style="font-family:'Orbitron', sans-serif; color:var(--gold); font-size:16px;">₹0</span></div>
         <div class="spec-item"><label>Level</label><span id="detLevel">-</span></div>
         <div class="spec-item"><label>Rank</label><span id="detRank">-</span></div>
         <div class="spec-item"><label>Login Type</label><span id="detLogin">-</span></div>
@@ -567,19 +645,25 @@
         <div class="spec-item"><label>Server</label><span id="detServer">-</span></div>
       </div>
 
-      <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px;">
-        <div style="font-size:11px; color:var(--muted); font-weight:700;">EVO GUNS:</div>
-        <div id="detEvoGuns" style="font-weight:800; color:#fff; margin-bottom:8px;">-</div>
-        <div style="font-size:11px; color:var(--muted); font-weight:700;">RARE BUNDLES:</div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px; margin-bottom:14px;">
+        <div style="font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="crosshair" style="width:12px; height:12px; color:var(--cyan);"></i> EVO GUNS:
+        </div>
+        <div id="detEvoGuns" style="font-weight:800; color:#fff; margin-bottom:10px;">-</div>
+        <div style="font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="sparkles" style="width:12px; height:12px; color:var(--gold);"></i> RARE BUNDLES:
+        </div>
         <div id="detBundles" style="font-weight:800; color:#fff;">-</div>
       </div>
 
-      <div style="margin-bottom:16px;">
-        <div style="font-size:11px; color:var(--muted); font-weight:700; margin-bottom:4px;">ACCOUNT DESCRIPTION:</div>
-        <div id="detDescription" style="font-size:13px; color:#dcdff0; white-space:pre-wrap; line-height:1.5;"></div>
+      <div style="margin-bottom:18px;">
+        <div style="font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:6px;">ACCOUNT DESCRIPTION:</div>
+        <div id="detDescription" style="font-size:13px; color:#dcdff0; white-space:pre-wrap; line-height:1.6;"></div>
       </div>
 
-      <button class="btn btn-primary" id="openPaymentBtn" style="width:100%; min-height:48px; font-size:15px;" type="button">Buy Now (QR / UPI Payment) ⚡</button>
+      <button class="btn btn-primary" id="openPaymentBtn" style="width:100%; min-height:48px; font-size:15px;" type="button">
+        <i data-lucide="zap" style="width:18px; height:18px;"></i> Buy Now (QR / UPI Payment)
+      </button>
     </div>
   </div>
 
@@ -588,20 +672,22 @@
     <div class="modal">
       <div class="modal-top">
         <h3>QR / UPI Payment</h3>
-        <button class="icon-btn" onclick="closeModal('paymentModal')" type="button">✕</button>
+        <button class="icon-btn" onclick="closeModal('paymentModal')" type="button"><i data-lucide="x" style="width:18px; height:18px;"></i></button>
       </div>
 
-      <div style="text-align:center; background:var(--card-bg); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:16px;">
-        <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">Scan QR Code or copy UPI ID to Pay</div>
-        <img id="payQrCode" src="" alt="Payment QR" style="width:180px; height:180px; border-radius:12px; border:2px solid var(--ff-orange); margin-bottom:10px;">
-        <div style="font-size:15px; font-weight:900; color:var(--ff-gold);" id="payUpiDisplay">savan@upi</div>
-        <button class="btn btn-secondary btn-small" style="margin-top:6px;" onclick="copyUpi()" type="button">📋 Copy UPI ID</button>
+      <div style="text-align:center; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:18px; margin-bottom:16px;">
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Scan QR Code or copy UPI ID to pay</div>
+        <img id="payQrCode" src="" alt="Payment QR" style="width:180px; height:180px; border-radius:var(--radius-md); border:2px solid var(--cyan); margin-bottom:12px; box-shadow:0 0 20px var(--cyan-glow);">
+        <div style="font-family:'Orbitron', sans-serif; font-size:15px; font-weight:900; color:var(--gold);" id="payUpiDisplay">savan@upi</div>
+        <button class="btn btn-secondary btn-small" style="margin-top:10px;" onclick="copyUpi()" type="button">
+          <i data-lucide="copy" style="width:12px; height:12px;"></i> Copy UPI ID
+        </button>
       </div>
 
       <form id="paymentForm">
         <div class="form-group">
           <label>Amount to Pay</label>
-          <input class="form-control" id="payAmountDisplay" readonly style="font-weight:900; color:var(--ff-gold);">
+          <input class="form-control" id="payAmountDisplay" readonly style="font-family:'Orbitron', sans-serif; font-weight:900; color:var(--gold);">
         </div>
         <div class="form-group">
           <label>Enter UTR / Transaction Ref ID *</label>
@@ -611,7 +697,9 @@
           <label>Payment Screenshot URL (Optional)</label>
           <input class="form-control" id="payScreenshotUrl" placeholder="https://imgur.com/your-screenshot.png">
         </div>
-        <button class="btn btn-primary" style="width:100%; min-height:46px;" type="submit" id="submitPayBtn">Submit Payment Proof 🚀</button>
+        <button class="btn btn-primary" style="width:100%; min-height:48px;" type="submit" id="submitPayBtn">
+          <i data-lucide="send" style="width:18px; height:18px;"></i> Submit Payment Proof 🚀
+        </button>
       </form>
     </div>
   </div>
@@ -620,9 +708,11 @@
   <div class="modal-backdrop" id="adminAuthModal">
     <div class="modal" style="max-width:400px;">
       <div class="modal-top">
-        <h3 style="color:var(--ff-orange);">⚡ Admin Authentication</h3>
+        <h3 style="color:var(--cyan); display:flex; align-items:center; gap:8px;">
+          <i data-lucide="lock" style="width:20px; height:20px;"></i> Admin Authentication
+        </h3>
       </div>
-      <p style="font-size:12px; color:var(--muted); margin-top:0;">Access restricted to store administrator only.</p>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:0; margin-bottom:16px;">Access restricted to store administrator only.</p>
       <form id="adminLoginForm">
         <div class="form-group">
           <label>Username</label>
@@ -632,12 +722,14 @@
           <label>Password</label>
           <input class="form-control" type="password" id="adminPass" placeholder="Enter password" required>
         </div>
-        <button class="btn btn-primary" style="width:100%;" type="submit">Unlock Admin Panel 🔓</button>
+        <button class="btn btn-primary" style="width:100%; min-height:44px;" type="submit">
+          <i data-lucide="unlock" style="width:16px; height:16px;"></i> Unlock Admin Panel
+        </button>
       </form>
     </div>
   </div>
 
-  <div class="toast" id="toast">Notice message</div>
+  <div class="toast" id="toast"><i data-lucide="info" style="width:16px; height:16px;"></i> <span id="toastText">Notice message</span></div>
 
   <script>
     (() => {
@@ -659,8 +751,14 @@
       const $ = id => document.getElementById(id);
       const money = val => `₹${Number(val || 0).toLocaleString('en-IN')}`;
 
+      function refreshIcons() {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      }
+
       function showToast(msg) {
-        $('toast').textContent = msg;
+        $('toastText').textContent = msg;
         $('toast').classList.add('show');
         setTimeout(() => $('toast').classList.remove('show'), 3000);
       }
@@ -691,7 +789,6 @@
         }
       }
 
-      // Check URL route for /raj
       function checkRoute() {
         const path = window.location.pathname;
         const hash = window.location.hash;
@@ -721,6 +818,7 @@
         document.querySelector(`.nav-btn[data-tab="${tab}"]`)?.classList.add('active');
         if (tab === 'orders') loadUserOrders();
         if (tab === 'profile') loadUserProfile();
+        refreshIcons();
       }
 
       async function loadUserProfile() {
@@ -755,7 +853,7 @@
         });
 
         if (!filtered.length) {
-          $('storeGrid').innerHTML = `<div style="color:var(--muted); padding:30px; grid-column:1/-1; text-align:center;">No Free Fire IDs found in this category.</div>`;
+          $('storeGrid').innerHTML = `<div style="color:var(--text-muted); padding:30px; grid-column:1/-1; text-align:center;">No Free Fire IDs found in this category.</div>`;
           return;
         }
 
@@ -763,23 +861,24 @@
           <div class="ff-card">
             <div class="ff-card-media">
               <img src="${item.images[0] || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80'}" alt="FF ID">
-              <span class="ff-badge-rank">${item.rank || 'Heroic'}</span>
+              <span class="ff-badge-rank"><i data-lucide="shield" style="width:10px; height:10px;"></i> ${item.rank || 'Heroic'}</span>
               <span class="ff-badge-level">Lvl ${item.level || 70}</span>
             </div>
             <div class="ff-card-body">
               <h3 class="ff-card-title">${item.title}</h3>
               <div class="ff-card-tags">
-                <span class="tag">🔥 ${item.evoGuns ? 'Evo Guns' : 'OG Bundle'}</span>
-                <span class="tag">👍 ${item.likes || '10k+'}</span>
-                <span class="tag">🌐 ${item.server || 'India'}</span>
+                <span class="tag"><i data-lucide="zap" style="width:10px; height:10px; color:var(--cyan);"></i> ${item.evoGuns ? 'Evo Guns' : 'OG Bundle'}</span>
+                <span class="tag"><i data-lucide="thumbs-up" style="width:10px; height:10px; color:var(--gold);"></i> ${item.likes || '10k+'}</span>
+                <span class="tag"><i data-lucide="globe" style="width:10px; height:10px;"></i> ${item.server || 'India'}</span>
               </div>
               <div class="ff-card-foot">
-                <div class="price-tag">${money(item.price)}<br><small>Instant Access</small></div>
+                <div class="price-tag">${money(item.price)}<small>Instant Access</small></div>
                 <button class="btn btn-primary btn-small" onclick="viewDetail('${item.id}')" type="button">View ID ⚡</button>
               </div>
             </div>
           </div>
         `).join('');
+        refreshIcons();
       }
 
       window.viewDetail = function(id) {
@@ -799,7 +898,6 @@
         $('detBundles').textContent = item.bundles || 'None';
         $('detDescription').textContent = item.description || '';
 
-        // Carousel slides
         const images = item.images.length ? item.images : ['https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80'];
         $('gallerySlides').innerHTML = images.map((img, idx) => `
           <img class="gallery-slide ${idx === 0 ? 'active' : ''}" src="${img}" alt="Slide ${idx}">
@@ -809,6 +907,7 @@
         `).join('');
 
         $('detailModal').classList.add('open');
+        refreshIcons();
       };
 
       window.prevSlide = function() { updateSlide(-1); };
@@ -836,6 +935,7 @@
           const data = await api('catalog');
           if (data.isBanned) {
             $('bannedScreen').style.display = 'flex';
+            refreshIcons();
             return;
           }
           state.listings = data.listings || [];
@@ -851,7 +951,6 @@
         }
       }
 
-      // User Payment Submission Modal
       $('openPaymentBtn').addEventListener('click', () => {
         if (!state.currentListing) return;
         closeModal('detailModal');
@@ -861,6 +960,7 @@
         $('payUpiDisplay').textContent = state.settings.upiId || 'savan@upi';
         $('payAmountDisplay').value = money(state.currentListing.price);
         $('paymentModal').classList.add('open');
+        refreshIcons();
       });
 
       window.copyUpi = function() {
@@ -891,38 +991,39 @@
           showToast(err.message);
         } finally {
           btn.disabled = false;
-          btn.textContent = 'Submit Payment Proof 🚀';
+          btn.innerHTML = `<i data-lucide="send" style="width:18px; height:18px;"></i> Submit Payment Proof 🚀`;
+          refreshIcons();
         }
       });
 
       async function loadUserOrders() {
-        $('myOrdersList').innerHTML = '<div style="color:var(--muted); padding:15px;">Loading orders...</div>';
+        $('myOrdersList').innerHTML = '<div style="color:var(--text-muted); padding:15px;">Loading orders...</div>';
         try {
           const data = await api('orders');
           const orders = data.orders || [];
           if (!orders.length) {
-            $('myOrdersList').innerHTML = '<div style="color:var(--muted); padding:20px; background:var(--card-bg); border-radius:12px; border:1px solid var(--line);">No orders placed yet.</div>';
+            $('myOrdersList').innerHTML = '<div style="color:var(--text-muted); padding:20px; background:var(--bg-card); border-radius:var(--radius-md); border:1px solid var(--border);">No orders placed yet.</div>';
             return;
           }
           $('myOrdersList').innerHTML = orders.map(o => `
-            <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; margin-bottom:12px;">
               <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
                 <b style="font-size:14px; color:#fff;">${o.listingTitle}</b>
-                <span style="font-weight:900; color:var(--ff-gold);">${money(o.price)}</span>
+                <span style="font-family:'Orbitron', sans-serif; font-weight:900; color:var(--gold);">${money(o.price)}</span>
               </div>
-              <div style="font-size:11px; color:var(--muted);">Order ID: ${o.id} · UTR: ${o.utrNumber}</div>
-              <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:11px; color:var(--muted);">${new Date(o.createdAt).toLocaleString()}</span>
-                <span style="padding:3px 8px; border-radius:6px; font-weight:800; font-size:10px; text-transform:uppercase; ${
-                  o.status === 'approved' ? 'background:#00e67622; color:#00e676;' :
-                  o.status === 'rejected' ? 'background:#ff335522; color:#ff3355;' :
-                  'background:#ffb70022; color:#ffb700;'
+              <div style="font-size:11px; color:var(--text-muted);">Order ID: ${o.id} · UTR: ${o.utrNumber}</div>
+              <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; color:var(--text-muted);">${new Date(o.createdAt).toLocaleString()}</span>
+                <span style="padding:4px 10px; border-radius:6px; font-weight:800; font-size:10px; text-transform:uppercase; ${
+                  o.status === 'approved' ? 'background:rgba(0,255,136,0.15); color:var(--green); border:1px solid var(--green);' :
+                  o.status === 'rejected' ? 'background:rgba(255,42,85,0.15); color:var(--red); border:1px solid var(--red);' :
+                  'background:rgba(255,215,0,0.15); color:var(--gold); border:1px solid var(--gold);'
                 }">${o.status}</span>
               </div>
             </div>
           `).join('');
         } catch (err) {
-          $('myOrdersList').innerHTML = `<div style="color:var(--ff-red); padding:15px;">${err.message}</div>`;
+          $('myOrdersList').innerHTML = `<div style="color:var(--red); padding:15px;">${err.message}</div>`;
         }
       }
 
@@ -960,25 +1061,22 @@
           const banned = data.bannedUsers || [];
           const settings = data.settings || {};
 
-          // Dashboard stats
           const approvedRev = orders.filter(o => o.status === 'approved').reduce((sum, o) => sum + (o.price || 0), 0);
           $('statTotalRev').textContent = money(approvedRev);
           $('statActiveListings').textContent = listings.filter(l => l.status === 'active').length;
           $('statPendingPayments').textContent = orders.filter(o => o.status === 'pending_approval').length;
           $('statBannedUsers').textContent = banned.length;
 
-          // Populate Settings
           $('setUpiId').value = settings.upiId || 'savan@upi';
           $('setQrCodeUrl').value = settings.qrCodeUrl || '';
           $('setSupportTelegram').value = settings.supportTelegram || 'savanofficial';
           $('setNoticeText').value = settings.noticeText || '';
 
-          // Render Manage Listings Table
           $('adminListingsTable').innerHTML = listings.map(l => `
-            <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
               <div>
-                <b>${l.title}</b> (${money(l.price)})<br>
-                <small style="color:var(--muted);">Status: ${l.status} · Level: ${l.level} · Rank: ${l.rank}</small>
+                <b style="color:#fff;">${l.title}</b> (${money(l.price)})<br>
+                <small style="color:var(--text-muted);">Status: ${l.status} · Level: ${l.level} · Rank: ${l.rank}</small>
               </div>
               <div style="display:flex; gap:6px;">
                 <button class="btn btn-secondary btn-small" onclick="editListing('${l.id}')">Edit</button>
@@ -987,40 +1085,38 @@
             </div>
           `).join('');
 
-          // Render Payments Queue
           $('adminPaymentsList').innerHTML = orders.length ? orders.map(o => `
-            <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:8px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px; margin-bottom:10px;">
               <div style="display:flex; justify-content:space-between;">
                 <b>Order: ${o.id}</b>
-                <span style="color:var(--ff-gold); font-weight:900;">${money(o.price)}</span>
+                <span style="font-family:'Orbitron', sans-serif; color:var(--gold); font-weight:900;">${money(o.price)}</span>
               </div>
               <div style="font-size:12px; color:var(--text); margin:4px 0;">Item: ${o.listingTitle}</div>
-              <div style="font-size:11px; color:var(--muted);">Buyer: ${o.buyerName} (@${o.buyerUsername || 'none'}) · ID: ${o.buyerId}</div>
-              <div style="font-size:11px; color:var(--ff-orange); font-weight:800; margin:4px 0;">UTR: ${o.utrNumber}</div>
-              ${o.screenshotUrl ? `<a href="${o.screenshotUrl}" target="_blank" style="color:var(--ff-gold); font-size:11px;">View Screenshot Proof 🔗</a>` : ''}
-              <div style="margin-top:8px; display:flex; gap:8px;">
+              <div style="font-size:11px; color:var(--text-muted);">Buyer: ${o.buyerName} (@${o.buyerUsername || 'none'}) · ID: ${o.buyerId}</div>
+              <div style="font-size:11px; color:var(--cyan); font-weight:800; margin:4px 0;">UTR: ${o.utrNumber}</div>
+              ${o.screenshotUrl ? `<a href="${o.screenshotUrl}" target="_blank" style="color:var(--gold); font-size:11px;">View Screenshot Proof 🔗</a>` : ''}
+              <div style="margin-top:10px; display:flex; gap:8px;">
                 ${o.status === 'pending_approval' ? `
                   <button class="btn btn-primary btn-small" onclick="approveOrder('${o.id}')">Approve & Mark Sold</button>
                   <button class="btn btn-danger btn-small" onclick="rejectOrder('${o.id}')">Reject</button>
-                ` : `<span style="font-size:11px; color:var(--muted); font-weight:800;">STATUS: ${o.status.toUpperCase()}</span>`}
+                ` : `<span style="font-size:11px; color:var(--text-muted); font-weight:800;">STATUS: ${o.status.toUpperCase()}</span>`}
               </div>
             </div>
-          `).join('') : '<div style="color:var(--muted);">No payment orders yet.</div>';
+          `).join('') : '<div style="color:var(--text-muted);">No payment orders yet.</div>';
 
-          // Render Banned Users
           $('bannedUsersList').innerHTML = banned.length ? banned.map(b => `
-            <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:10px; padding:10px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <div><b>User ID: ${b.id}</b> ${b.username ? `(@${b.username})` : ''}</div>
               <button class="btn btn-secondary btn-small" onclick="unbanUser('${b.id}')">Unban</button>
             </div>
-          `).join('') : '<div style="color:var(--muted);">No users currently banned.</div>';
+          `).join('') : '<div style="color:var(--text-muted);">No users currently banned.</div>';
 
+          refreshIcons();
         } catch (err) {
           showToast(err.message);
         }
       }
 
-      // Admin Save Listing
       $('adminListingForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const images = $('ffImages').value.split('\n').map(s => s.trim()).filter(Boolean);
@@ -1154,12 +1250,12 @@
         }
       });
 
-      // Tab Switchers
       function switchAdminTab(atab) {
         document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.atab-view').forEach(v => v.style.display = 'none');
         document.querySelector(`.admin-tab[data-atab="${atab}"]`)?.classList.add('active');
         $(`atab-${atab}`).style.display = 'block';
+        refreshIcons();
       }
 
       document.addEventListener('click', e => {
@@ -1191,6 +1287,7 @@
       setUserHeader();
       loadCatalog();
       checkRoute();
+      refreshIcons();
     })();
   </script>
 </body>
